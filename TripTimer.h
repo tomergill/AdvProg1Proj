@@ -7,13 +7,13 @@
 
 #include "TimeListener.h"
 
-class tripTimer : public timeListener {
+class TripTimer : public TimeListener {
 private:
     Trip *trip;
 public:
     virtual void tock();
-    tripTimer(Trip *t);
-    ~tripTimer();
+    TripTimer(Trip *t);
+    ~TripTimer();
 };
 
 

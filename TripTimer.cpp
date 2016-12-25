@@ -2,24 +2,24 @@
 // Created by tomer on 12/25/16.
 //
 
-#include "tripTimer.h"
+#include "TripTimer.h"
 
 /**
  * Constructor.
  * @param t Pointer to a Trip to be moved in the "tock" function.
  */
-tripTimer::tripTimer(Trip *t) {
+TripTimer::TripTimer(Trip *t) {
     trip = t;
 }
 
 /**
  * Destructor.
  */
-tripTimer::~timeListener() {}
+TripTimer::~TripTimer() {}
 
 /**
  * Called when time has passed, and moves the trip one step.
  */
-void tripTimer::tock() {
+void TripTimer::tock() {
     trip->moveOneStep();
 }
