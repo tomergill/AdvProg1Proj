@@ -9,9 +9,13 @@
  * Class implementing the listener/observer design pattern, specifiecly about
  * time handling.
  */
-class timeListener {
+class TimeListener {
 public:
+    /**
+     * Function that indicates that time has passed.
+     */
     virtual void tock() = 0;
+    ~TimeListener();
 };
 
 

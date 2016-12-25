@@ -10,6 +10,7 @@
 #include "Trip.h"
 #include "Map.h"
 #include "BFS.h"
+#include "TimeListener.h"
 #include <list>
 #include <iostream>
 
@@ -26,6 +27,7 @@ private:
     list<Trip *> trips;
     Map *map;
     BFS *bfs;
+
 
     Driver *findClosestDriverToPoint(AbstractNode *p);
 

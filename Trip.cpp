@@ -59,11 +59,9 @@ void Trip::move() {
  * move the trip
  */
 void Trip::moveOneStep() {
-    if (!course.empty()) {
-        while (!this->driver->getLocation()->operator==(
-                *(this->map->getNode(this->end->getX(), this->end->getY())))) {
-            this->driver->move();
-        }
+    if (!course.empty() && !this->driver->getLocation()->operator==(
+            *(this->map->getNode(this->end->getX(), this->end->getY())))) {
+        this->driver->move();
     }
 }
 
