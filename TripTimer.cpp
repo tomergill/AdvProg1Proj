@@ -23,3 +23,11 @@ TripTimer::~TripTimer() {}
 void TripTimer::tock() {
     trip->moveOneStep();
 }
+
+/**
+ * @return The Trip pointer.
+ */
+Trip * TripTimer::getTrip()
+{
+    return trip;
+}

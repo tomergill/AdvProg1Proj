@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "BFS.h"
 #include "TimeListener.h"
+#include "TripTimer.h"
 #include <list>
 #include <iostream>
 
@@ -27,9 +28,11 @@ private:
     list<Trip *> trips;
     Map *map;
     BFS *bfs;
-
+    list<TimeListener *> timers;
 
     Driver *findClosestDriverToPoint(AbstractNode *p);
+
+    void deletetriplistener(int tripId);
 
 public:
     void answerCall(int id, Point *start, Point *end, double tarif, int pass);
@@ -38,7 +41,7 @@ public:
 
     void addTaxi(AbstractCab *t);
 
-    void moveAllTrips();
+    void timePassed();
 
     TaxiCenter(Map *m);
 

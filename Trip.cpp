@@ -52,7 +52,10 @@ void Trip::addPassenger(Passenger *p) {
  * move the trip one step
  */
 void Trip::move() {
-    moveOneStep();
+    while (!course.empty() && !this->driver->getLocation()->operator==(
+            *(this->map->getNode(this->end->getX(), this->end->getY())))) {
+        moveOneStep();
+    }
 }
 
 /*
@@ -153,4 +156,15 @@ AbstractNode *Trip::getStart() {
  */
 AbstractNode *Trip::getEnd() {
     return map->getNode(end->getX(), end->getY());
+}
+
+/**
+ * Finishes the trip by giving the driver satisfaction ratings.
+ */
+void Trip::finish()
+{
+    int sum = 0, i;
+    for (i = 0; i < passengersNum; i++)
+        sum += passengersVec[i]->getRating();
+    driver->addSatisfaction(sum, passengersNum);
 }

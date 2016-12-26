@@ -25,6 +25,8 @@ void TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif,
     //Assign driver to trip
     t->setDriver(findClosestDriverToPoint(map->getNode(start->getX(),
                                                        start->getY())));
+    //add a TripTimer for this trip.
+    timers.push_front(new TripTimer(t));
 }
 
 /*
@@ -43,25 +45,27 @@ void TaxiCenter::addTaxi(AbstractCab *t) {
 }
 
 /*
- * move all trips
+ * Notifying all TimeListeners that time has passed.
  */
-void TaxiCenter::moveAllTrips() {
-    Trip *ptr;
-    list<Trip *>::iterator it = trips.begin();
-    for (it; it != trips.end(); it++) {
-        if ((*it)->getDriver() == NULL) {
-            (*it)->setDriver(findClosestDriverToPoint((*it)->getStart()));
+void TaxiCenter::timePassed() {
+    list<TimeListener *>::iterator tick;
+    list<Trip *>::iterator it;
+
+    //notifying
+    for (tick = timers.begin(); tick != timers.end(); tick++)
+    {
+        (*tick)->tock();
+    }
+
+    //deleting finished trips
+    for (it = trips.begin(); it != trips.end(); it++)
+    {
+        if ((*it)->getEnd()->operator==(*((*it)->getDriver()->getLocation())))
+        {
+            trips.remove(*it);
+            (*it)->finish();
+            delete (*it);
         }
-    }
-
-    for (it = trips.begin(); it != trips.end(); it++) {
-        (*it)->moveOneStep();
-    }
-
-    while (!trips.empty()) {
-        ptr = trips.front();
-        trips.pop_front();
-        delete ptr;
     }
 }
 
@@ -74,6 +78,7 @@ TaxiCenter::TaxiCenter(Map *m) {
     drivers = {};
     cabs = {};
     trips = {};
+    timers = {};
 }
 
 /*
@@ -169,6 +174,13 @@ TaxiCenter::~TaxiCenter() {
         trips.pop_front();
         delete trip;
     }
+
+    while (!timers.empty())
+    {
+        TimeListener *timer = timers.front();
+        timers.pop_front();
+        delete timer;
+    }
     delete map;
     delete bfs;
 }
@@ -212,6 +224,22 @@ Trip *TaxiCenter::getTrip(int id) {
     for (it; it != trips.end(); it++) {
         if ((*it)->getRideId() == id) {
             return *it;
+        }
+    }
+}
+
+void TaxiCenter::deletetriplistener(int tripId)
+{
+    list<TimeListener *>::iterator it;
+    TripTimer *temp;
+
+    for (it = timers.begin(); it != timers.end(); it++)
+    {
+        temp = dynamic_cast<TripTimer *> (*it);
+        if (temp != NULL && tripId == temp->getTrip()->getRideId())
+        {
+            timers.remove(*it);
+            delete temp;
         }
     }
 }

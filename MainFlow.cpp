@@ -1,6 +1,5 @@
 
 #include "MainFlow.h"
-#include "MatrixMap.h"
 
 /*
  * c-tor of main flow
@@ -68,7 +67,7 @@ void MainFlow::flow() {
                 taxiCenter->printDriverLocation(driverId);
                 break;
             case 6: //move all trips
-                taxiCenter->moveAllTrips();
+                taxiCenter->timePassed();
             default:
                 break;
         }

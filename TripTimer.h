@@ -14,6 +14,7 @@ public:
     virtual void tock();
     TripTimer(Trip *t);
     ~TripTimer();
+    Trip *getTrip();
 };
 
 
