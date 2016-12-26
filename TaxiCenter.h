@@ -35,13 +35,16 @@ private:
     void deletetriplistener(int tripId);
 
 public:
-    void answerCall(int id, Point *start, Point *end, double tarif, int pass);
+    void answerCall(int id, Point *start, Point *end, double tarif, int pass,
+                    int startTime);
 
     void addDriver(int id, int age, MartialStatus mstatus);
 
+    void addDriver(Driver *d);
+
     void addTaxi(AbstractCab *t);
 
-    void timePassed();
+    void timePassed(int time);
 
     TaxiCenter(Map *m);
 

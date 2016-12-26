@@ -7,7 +7,8 @@
 /*
  * c tor of trip
  */
-Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map) {
+Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
+           int startTime) {
     this->rideId = id;
     this->start = start;
     this->end = end;
@@ -18,6 +19,7 @@ Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map) {
     this->totalMPassed = 0;
     this->map = map;
     this->bfs = new BFS();
+    time = startTime;
 }
 
 /*
@@ -161,10 +163,13 @@ AbstractNode *Trip::getEnd() {
 /**
  * Finishes the trip by giving the driver satisfaction ratings.
  */
-void Trip::finish()
-{
+void Trip::finish() {
     int sum = 0, i;
     for (i = 0; i < passengersNum; i++)
         sum += passengersVec[i]->getRating();
     driver->addSatisfaction(sum, passengersNum);
+}
+
+int Trip::getStartTime() {
+    return time;
 }

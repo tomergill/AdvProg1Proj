@@ -3,7 +3,6 @@
 //
 
 #include "Cab.h"
-#include "AbstractNode.h"
 
 using namespace std;
 
@@ -12,8 +11,6 @@ using namespace std;
  */
 Cab::Cab(int id1, CarManufactur type1, CarColor color1) :
         AbstractCab(id1, type1, color1) {
-        this->km=0;
-
 }
 
 /*
@@ -22,16 +19,7 @@ Cab::Cab(int id1, CarManufactur type1, CarColor color1) :
 AbstractNode *Cab::move(queue<AbstractNode *> *course) {
     AbstractNode *node;
     node = (*course).front();
-    this->km+=1;
+    this->passedKm+=1;
     course->pop();
     return node;
 }
-
-/*
-* return km passed
-*/
-int Cab::getKm(){
-return this->km;
-}
-
-Cab::~Cab(){}

@@ -12,22 +12,20 @@
 #include "AbstractNode.h"
 
 class AbstractCab {
-private:
+protected:
     int cabId;
-    double passedKm;
+    int passedKm;
     CarManufactur type;
     CarColor color;
 public:
     AbstractCab(){}
-    
-    virtual ~AbstractCab()=0;
     AbstractCab(int id1, CarManufactur type1, CarColor color1);
 
     virtual int getId();
 
     virtual AbstractNode *move(queue<AbstractNode*> *course)=0;
     
-    virtual  int getKm()=0;
+    virtual int getKm();
 };
 
 #endif //EX3_TIHNUT_ABSTRACTTEXI_H

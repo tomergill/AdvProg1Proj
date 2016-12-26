@@ -8,23 +8,18 @@
 
 #include <queue>
 #include "Point.h"
-#include "CarColor.h"
-#include "CarManufactur.h"
-#include "Cab.h"
+#include "AbstractCab.h"
 
 /*
  * like cab but move faster and more expensive
  */
 class LuxuryCab : public AbstractCab {
 private:
-  int km;
 public:
     
     LuxuryCab(int id, CarManufactur type, CarColor color);
 
     AbstractNode *move(queue<AbstractNode*> *course);
-    
-    int getKm();
     
     ~LuxuryCab();
 };

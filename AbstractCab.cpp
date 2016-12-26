@@ -3,8 +3,6 @@
 //
 
 #include "AbstractCab.h"
-#include "CarManufactur.h"
-#include "CarColor.h"
 
 /*
  * c-tor of AbstractNode
@@ -21,7 +19,9 @@ AbstractCab::AbstractCab(int id1, CarManufactur type1, CarColor color1) {
 int AbstractCab::getId() {
     return this->cabId;
 }
-AbstractCab::~AbstractCab() {
 
+int AbstractCab::getKm()
+{
+    return passedKm;
 }
 

@@ -24,9 +24,11 @@ private:
     Map *map;
     BFS *bfs;
     queue<AbstractNode *> course;
+    int time;
 
 public:
-    Trip(int id, Point *start, Point *end, double tarif, Map *map);
+    Trip(int id, Point *start, Point *end, double tarif, Map *map,
+         int startTime);
 
     ~Trip();
 
@@ -61,6 +63,8 @@ public:
     AbstractNode *getEnd();
 
     void finish();
+
+    int getStartTime();
 };
 
 

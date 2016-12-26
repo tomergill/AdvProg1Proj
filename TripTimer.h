@@ -6,14 +6,18 @@
 #define PROJECT_TRIPTIMER_H
 
 #include "TimeListener.h"
+#include "Trip.h"
 
 class TripTimer : public TimeListener {
 private:
     Trip *trip;
 public:
-    virtual void tock();
+    virtual void tock(int time);
+
     TripTimer(Trip *t);
+
     ~TripTimer();
+
     Trip *getTrip();
 };
 

@@ -20,14 +20,14 @@ TripTimer::~TripTimer() {}
 /**
  * Called when time has passed, and moves the trip one step.
  */
-void TripTimer::tock() {
-    trip->moveOneStep();
+void TripTimer::tock(int time) {
+    if (time >= trip->getStartTime())
+        trip->moveOneStep();
 }
 
 /**
  * @return The Trip pointer.
  */
-Trip * TripTimer::getTrip()
-{
+Trip *TripTimer::getTrip() {
     return trip;
 }

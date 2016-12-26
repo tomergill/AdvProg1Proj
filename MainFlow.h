@@ -8,8 +8,6 @@
 #include "MapFactory.h"
 #include "TaxiCenter.h"
 #include <iostream>
-#include "CarColor.h"
-#include "CarManufactur.h"
 #include "LuxuryCab.h"
 
 /*
@@ -18,7 +16,9 @@
 class MainFlow {
 private:
     MapFactory *mapFactory;
-    TaxiCenter* taxiCenter;
+    TaxiCenter *taxiCenter;
+    int time;
+
     void flow();
 
     MartialStatus getStatusByChar(char c);
@@ -29,6 +29,7 @@ private:
 
 public:
     ~MainFlow();
+
     MainFlow(MapFactory *factory);
 
     void startFlow(string mapInput);

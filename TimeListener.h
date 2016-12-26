@@ -14,8 +14,9 @@ public:
     /**
      * Function that indicates that time has passed.
      */
-    virtual void tock() = 0;
-    ~TimeListener();
+    virtual void tock(int time) = 0;
+
+    virtual ~TimeListener();
 };
 
 

@@ -12,9 +12,7 @@ enum MartialStatus {
     S, M, D, W
 };
 
-/*
- * class driver he move the cab
- */
+
 class Driver {
 private:
     int id;
@@ -29,8 +27,8 @@ private:
     queue<AbstractNode *> *course;
     AbstractNode *location;
 public:
-    Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *node);
-
+    Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode* node);
+    
     ~Driver();
 
     void changeTaxi(AbstractCab *t);
@@ -55,8 +53,8 @@ public:
 
     AbstractNode *move();
 
-    int getKm();
-
+    int getKm() ;
+    
 };
 
 

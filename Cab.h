@@ -18,15 +18,11 @@
  */
 class Cab : public AbstractCab {
 private:
-int km;
 
 public:
     Cab(int id, CarManufactur type, CarColor color);
 
     AbstractNode *move(queue<AbstractNode *> *course);
-    
-       int getKm();
-       ~Cab();
 };
 
 #endif //TESTS_CAB_H

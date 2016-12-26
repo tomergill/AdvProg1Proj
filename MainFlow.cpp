@@ -7,6 +7,7 @@
 MainFlow::MainFlow(MapFactory *factory) {
     mapFactory = factory;
     taxiCenter = NULL;
+    time = 0;
 }
 
 /*
@@ -16,17 +17,19 @@ void MainFlow::startFlow(string mapInput) {
     taxiCenter = new TaxiCenter(mapFactory->buildMap(mapInput));
     flow();
 }
-MainFlow::~MainFlow(){
-delete taxiCenter;
+
+MainFlow::~MainFlow() {
+    delete taxiCenter;
 }
+
 /*
  * run the program
  */
 void MainFlow::flow() {
     int input, driverId = 0, age = 0, experience = 0, cabId = 0, start_x = 0,
             start_y = 0, end_x = 0, end_y = 0, pass_num = 0, rideId = 0,
-            taxi_type = 1;
-    MartialStatus status = S;
+            taxi_type = 1, time1 = 0;
+    MartialStatus status = MartialStatus::S;
     double tariff = 0.0;
     CarColor color = CarColor::R;
     CarManufactur manufactur = CarManufactur::F;
@@ -46,10 +49,10 @@ void MainFlow::flow() {
             case 2: //New Trip
                 cin >> rideId >> dummy >> start_x >> dummy >> start_y >> dummy
                     >> end_x >> dummy >> end_y >> dummy >> pass_num >> dummy
-                    >> tariff;
+                    >> tariff >> dummy >> time1;
                 taxiCenter->answerCall(rideId, new Point(start_x, start_y),
                                        new Point(end_x, end_y), tariff,
-                                       pass_num);
+                                       pass_num, time1);
                 break;
             case 3: //New Cab
                 cin >> cabId >> dummy >> taxi_type >> dummy >> manu >> dummy
@@ -66,8 +69,9 @@ void MainFlow::flow() {
                 cin >> driverId;
                 taxiCenter->printDriverLocation(driverId);
                 break;
-            case 6: //move all trips
-                taxiCenter->timePassed();
+            case 9: //move trips
+                time++;
+                taxiCenter->timePassed(time);
             default:
                 break;
         }
@@ -82,15 +86,15 @@ void MainFlow::flow() {
 MartialStatus MainFlow::getStatusByChar(char c) {
     switch (c) {
         case 'S':
-            return S;
+            return MartialStatus::S;
         case 'M':
-            return M;
+            return MartialStatus::M;
         case 'W':
-            return W;
+            return MartialStatus::W;
         case 'D':
-            return D;
+            return MartialStatus::D;
         default:
-            return S;
+            return MartialStatus::S;
     }
 }
 
