@@ -1,15 +1,20 @@
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-set(core_SRCS Algorithm.h Algorithm.cpp AbstractCab.cpp AbstractCab.h
-        AbstractNode.cpp AbstractNode.h BFS.cpp BFS.h MatrixMap.cpp
-        MatrixMap.h MapFactory.cpp MapFactory.h MatrixFactory.cpp
-        MatrixFactory.h Node.cpp Node.h Point.cpp Point.h Driver.cpp Driver.h
-        Cab.cpp Cab.h Map.h Map.cpp Passenger.cpp Passenger.h TaxiCenter.cpp
-        TaxiCenter.h LuxuryCab.cpp LuxuryCab.h Trip.cpp TaxiCenter.cpp Trip.h
-        MainFlow.cpp MainFlow.h TimeListener.h TimeListener.cpp TripTimer.h
-        TripTimer.cpp main.cpp)
+cmake_minimum_required(VERSION 3.6)
+project(ex3)
 
-#add_library(core ${core_SRCS})
-add_executable(AP1_EXE ${core_SRCS})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
 
-#target_link_libraries(exe core)
+set(BOOST_ROOT CACHE PATH "/usr/include/boost/")
+find_package(Boost 1.58.0 COMPONENTS serialization system)
+include_directories(${Boost_INCLUDE_DIR})
+
+add_subdirectory(lib/googletest-master)
+include_directories(lib/googletest-master/googletest/include)
+include_directories(lib/googletest-master/googlemock/include)
+
+set(SOURCE_FILES src/main.cpp src/TimeListener.cpp src/TimeListener.h src/TripTimer.cpp src/TripTimer.h src/AbstractNode.cpp src/Udp.cpp src/Udp.h src/TripTimer.cpp src/TripTimer.h src/Socket.cpp src/Socket.h src/AbstractNode.h src/AbstractCab.cpp src/AbstractCab.h src/Algorithm.h src/BFS.cpp src/BFS.h src/Cab.cpp src/Cab.h src/CarColor.h src/CarColor.h src/CarManufactur.h src/Driver.h src/Driver.cpp src/LuxuryCab.h src/LuxuryCab.cpp src/MainFlow.cpp src/MainFlow.h src/Map.h src/MapFactory.h src/Node.cpp src/MatrixFactory.cpp src/MatrixFactory.h src/MatrixMap.cpp src/MatrixMap.h src/Node.h src/Passenger.cpp src/Passenger.h src/Point.cpp src/Point.h src/TaxiCenter.cpp src/TaxiCenter.h src/Trip.cpp src/Trip.h Test/AbstractNodeTest.cpp Test/CabTest.cpp Test/gtest.cpp Test/LuxuryCabTest.cpp Test/MatrixFactoryTest.cpp Test/MatrixTest.cpp Test/NodeTest.cpp Test/test_point.cpp Test/test_texicenter.cpp Test/test_trip.cpp Test/test_passenger.cpp Test/test_bfs.cpp Test/test_driver.cpp Test/gtest.cpp src/Algorithm.cpp src/MapFactory.cpp src/Map.cpp)
+add_executable(EX2 ${SOURCE_FILES} Test/AbstractNodeTest.cpp Test/CabTest.cpp Test/gtest.cpp Test/LuxuryCabTest.cpp Test/MatrixFactoryTest.cpp Test/MatrixTest.cpp Test/NodeTest.cpp Test/test_point.cpp Test/test_texicenter.cpp Test/test_trip.cpp Test/test_passenger.cpp Test/test_bfs.cpp Test/test_driver.cpp Test/gtest.cpp )
+target_link_libraries(EX2 gtest gtest_main)
+add_executable(main_test main.cpp)
+target_link_libraries(main_test ${Boost_LIBRARIES})
+
 
