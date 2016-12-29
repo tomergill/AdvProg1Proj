@@ -12,7 +12,7 @@ using namespace std;
 Cab::Cab(int id1, CarManufactur type1, CarColor color1) :
         AbstractCab(id1, type1, color1) {
 }
-
+Cab::Cab(){}
 /*
  * return the next point of the cab.
  */
@@ -24,4 +24,4 @@ AbstractNode *Cab::move(queue<AbstractNode *> *course) {
     return node;
 }
 
-BOOST_CLASS_EXPORT(AbstractCab)
+BOOST_CLASS_EXPORT(Cab)

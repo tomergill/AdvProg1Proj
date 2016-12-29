@@ -28,4 +28,6 @@ AbstractNode *LuxuryCab::move(queue<AbstractNode *> *course) {
 
 LuxuryCab::~LuxuryCab(){}
 
-//BOOST_CLASS_EXPORT(AbstractCab)
+LuxuryCab::LuxuryCab() {}
+
+BOOST_CLASS_EXPORT(LuxuryCab)

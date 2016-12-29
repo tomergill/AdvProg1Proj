@@ -4,7 +4,6 @@
 #include <iostream>
 #include "Point.h"
 #include "Node.h"
-#include <boost/serialization/export.hpp>
 
 using namespace std;
 
@@ -88,4 +87,4 @@ bool Node::isObstacle() {
 
 Node::~Node(){}
 
-BOOST_CLASS_EXPORT(AbstractNode)
+BOOST_CLASS_EXPORT(Node)

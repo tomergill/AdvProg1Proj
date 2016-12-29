@@ -31,6 +31,7 @@ class Cab : public AbstractCab {
 private:
 
 public:
+    Cab();
     Cab(int id, CarManufactur type, CarColor color);
 
     AbstractNode *move(queue<AbstractNode *> *course);

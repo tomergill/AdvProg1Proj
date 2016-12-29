@@ -24,10 +24,9 @@ class Node : public AbstractNode {
     template<class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
+        ar & boost::serialization::base_object<AbstractNode>(*this);
         ar & p;
         ar & arr;
-        ar & obstacle;
-        ar & boost::serialization::base_object<AbstractNode>(*this);
 
     }
 private:

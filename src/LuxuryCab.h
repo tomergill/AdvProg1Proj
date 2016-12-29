@@ -29,6 +29,8 @@ public:
     
     LuxuryCab(int id, CarManufactur type, CarColor color);
 
+    LuxuryCab();
+
     AbstractNode *move(queue<AbstractNode*> *course);
     
     ~LuxuryCab();
