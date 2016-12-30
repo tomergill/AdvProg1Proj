@@ -64,9 +64,14 @@ void Trip::move() {
  * move the trip
  */
 void Trip::moveOneStep() {
-    if (!course.empty() && !this->driver->getLocation()->operator==(
-            *(this->map->getNode(this->end->getX(), this->end->getY())))) {
-        this->driver->move(&this->course);
+
+    if (!course.empty() && driver != NULL)
+    {
+        if (!this->driver->getLocation()->operator==(
+            *(this->map->getNode(this->end->getX(), this->end->getY()))))
+        {
+            this->driver->move(&this->course);
+        }
     }
 }
 

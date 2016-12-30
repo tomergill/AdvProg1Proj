@@ -29,6 +29,7 @@ private:
     Map *map;
     BFS *bfs;
     list<TimeListener *> timers;
+
     void deletetriplistener(int tripId);
 
 public:
@@ -70,8 +71,12 @@ public:
     ~TaxiCenter();
 
     list<Driver *> getDrivers();
+
     list<Trip *> getTrips();
 
+    void assignADriverToTrip(int tripId);
+
+    void assignADriverToTrip(Trip *t);
 };
 
 

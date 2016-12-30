@@ -35,7 +35,7 @@ MainFlow::~MainFlow() {
 void MainFlow::flow() {
     int input, driverId = 0, age = 0, experience = 0, cabId = 0, start_x = 0,
             start_y = 0, end_x = 0, end_y = 0, pass_num = 0, rideId = 0,
-            taxi_type = 1, time1 = 0;
+            taxi_type = 1, time1 = 0, numOfDrivers = 0;
     MartialStatus status = MartialStatus::S;
     double tariff = 0.0;
     CarColor color = CarColor::R;
@@ -46,7 +46,8 @@ void MainFlow::flow() {
     while (input != 7) {
         switch (input) {
             case 1: //New Driver
-                this->addDriver(input);
+                cin >> numOfDrivers;
+                this->addDriver(numOfDrivers);
                 break;
 
             case 2: //New Trip
@@ -74,23 +75,24 @@ void MainFlow::flow() {
                 break;
             case 9: //move trips
                 time++;
-                this->driver = this->taxiCenter->getDrivers().front();
+                //this->driver = this->taxiCenter->getDrivers().front();
                 if (this->trip == NULL) {
-                    this->trip->setDriver(NULL);
                     this->trip = this->taxiCenter->getTrips().front();
-                    this->sendTrip(this->trip);
+                    this->trip->setDriver(NULL);
+                    //this->sendTrip(this->trip);
+                    taxiCenter->assignADriverToTrip(trip);
                 }
-                this->trip->setDriver(this->driver);
+                //this->trip->setDriver(this->driver);
                 taxiCenter->timePassed(time);
-                this->sendDriver(this->driver);
+                //this->sendDriver(this->driver);
 
             default:
                 break;
         }
         cin >> input;
     }
-    this->driver->setLocation();
-    this->sendDriver(this->driver);
+    //this->driver->setLocation();
+    //this->sendDriver(this->driver);
 }
 
 /**

@@ -37,9 +37,11 @@ void TaxiCenter::addDriver(int id, int age, MartialStatus mstatus) {
     Driver *d = new Driver(id, age, mstatus, bfs, map->getFirst());
     drivers.push_back(d);
 }
-void TaxiCenter::addDriver(Driver* driver) {
+
+void TaxiCenter::addDriver(Driver *driver) {
     drivers.push_back(driver);
 }
+
 /*
  * add taxi to taxicenter
  */
@@ -55,14 +57,28 @@ void TaxiCenter::timePassed(int time) {
     list<Trip *>::iterator it = trips.begin();
     Trip *temp = NULL;
 
+    /*
+     * checking if there are trips that need a driver, and assigning one if
+     * possible.
+     */
+    for (it; it != trips.end(); it++)
+    {
+        if ((*it)->getDriver() == NULL)
+        {
+            assignADriverToTrip(*it);
+        }
+    }
+
     //notifying
     for (tick = timers.begin(); tick != timers.end(); tick++) {
         (*tick)->tock(time);
     }
 
     //deleting finished trips
+    it = trips.begin();
     while (it != trips.end()) {
-        if ((*it)->getEnd()->operator==(*((*it)->getDriver()->getLocation()))) {
+        if ((*it)->getDriver() != NULL && (*it)->getEnd()->operator==(*((*it)
+                ->getDriver()->getLocation()))) {
             (*it)->finish();
             temp = *it;
             it = trips.erase(it);
@@ -117,9 +133,12 @@ Driver *TaxiCenter::findClosestDriverToPoint(AbstractNode *p) {
     bool breaked;
     list<Driver *>::iterator it_d = drivers.begin();
     list<Trip *>::iterator it_t = trips.begin();
-    for (it_d; it_d != drivers.end(); it_d++) {
-        if ((*it_d)->getLocation()->operator==(*p)) {
+
+    for (it_d; it_d != drivers.end(); it_d++) { //going over drivers
+        if ((*it_d)->getLocation()->operator==(*p)) { //if found driver in p
             breaked = false;
+
+            /*Check if driver is already assigned to different trip:*/
             for (it_t = trips.begin(); it_t != trips.end(); it_t++) {
                 if ((*it_t)->getDriver() != NULL
                     && (*it_t)->getDriver()->getId() == (*it_d)->getId()) {
@@ -241,6 +260,8 @@ void TaxiCenter::deletetriplistener(int tripId) {
         if (temp != NULL && tripId == temp->getTrip()->getRideId()) {
             it = timers.erase(it);
             delete temp;
+        } else {
+            it++;
         }
     }
 }
@@ -256,4 +277,14 @@ list<Driver *> TaxiCenter::getDrivers() {
 
 list<Trip *> TaxiCenter::getTrips() {
     return this->trips;
+}
+
+void TaxiCenter::assignADriverToTrip(int tripId) {
+    assignADriverToTrip(getTrip(tripId));
+}
+
+void TaxiCenter::assignADriverToTrip(Trip *t)
+{
+    Driver *d = findClosestDriverToPoint(t->getStart());
+    t->setDriver(d);
 }
