@@ -10,7 +10,7 @@
 
 class client {
 public:
-    client(Driver *driver, Socket *socket);
+    client(Driver *driver, Socket *socket, Trip* trip);
 
     client();
 
@@ -23,5 +23,6 @@ private:
     Driver *driver;
     Socket *socket;
     AbstractCab* cab;
+    Trip* trip;
 };
 #endif //EX3_CLIENT_H

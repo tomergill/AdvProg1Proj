@@ -10,6 +10,7 @@
 #include "Passenger.h"
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/queue.hpp>
+#include <boost/serialization/deque.hpp>
 
 /*
  * represent the trip and who is the driver and his taxo and passengers
@@ -29,9 +30,8 @@ class Trip {
         ar & driver;
         ar & map;
         ar & bfs;
-        ar & course;
+       // ar & course;
         ar & time;
-        ar & course;
     }
 private:
     int rideId;

@@ -11,14 +11,20 @@
  * abstract class of data structers.
  */
 class Map {
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+    }
+
 public:
     virtual AbstractNode *getFirst()=0;
 
     virtual void newRoad()=0;
 
     virtual AbstractNode *getNode(int x, int y) =0;
-    
-    virtual ~Map()=0;
+
+    virtual ~Map() = 0;
 
 //    virtual bool operator==(const Map &node2)=0;
 

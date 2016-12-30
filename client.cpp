@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     client1->sendDriver();
     client1->setCab();
     client1->getDriver();
-   // delete client1;
+     delete client1;
     return 0;
 }
 
@@ -85,11 +85,12 @@ CarColor getColorByChar(char c) {
 }
 
 
-client::client(Driver *driver, Socket *socket) : driver(driver), socket(socket) {}
+client::client(Driver *driver, Socket *socket, Trip* trip) : driver(driver), socket(socket) {}
 
 client::~client() {
     delete socket;
     delete driver;
+    delete trip;
 }
 
 void client::setCab() {
@@ -137,8 +138,6 @@ void client::sendDriver() {
 void client::getDriver() {
     while (true) {
         Driver *driver;
-        // FactoryCab factoryCab;
-        // Cab* gp2;
         char buffer[4096];
         this->socket->reciveData(buffer, sizeof(buffer));
         char *end = buffer + 4095;
@@ -157,4 +156,5 @@ client::client() {
     this->socket = new Udp(0, 12345);
     this->driver = NULL;
     this->cab = NULL;
+    this->trip = NULL;
 }

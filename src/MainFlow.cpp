@@ -46,13 +46,6 @@ void MainFlow::flow() {
     while (input != 7) {
         switch (input) {
             case 1: //New Driver
-                /* cin >> driverId >> dummy >> age >> dummy >> mstatus >> dummy
-                     >> experience >> dummy >> cabId;*/
-                //status = getStatusByChar(mstatus);
-                cin >> input;
-                /*taxiCenter->addDriver(driverId, age, status);
-                taxiCenter->assignCabToDriver(cabId, driverId);*/
-
                 this->addDriver(input);
                 break;
 
@@ -82,12 +75,15 @@ void MainFlow::flow() {
             case 9: //move trips
                 time++;
                 this->driver = this->taxiCenter->getDrivers().front();
-                if (this->trip == NULL)
+                if (this->trip == NULL) {
+                    this->trip->setDriver(NULL);
                     this->trip = this->taxiCenter->getTrips().front();
+                    this->sendTrip(this->trip);
+                }
                 this->trip->setDriver(this->driver);
                 taxiCenter->timePassed(time);
                 this->sendDriver(this->driver);
-               // this->sendTrip(this->trip);
+
             default:
                 break;
         }
@@ -204,7 +200,7 @@ void MainFlow::sendCab(AbstractCab *cab) {
     this->socket->sendData(serial_str);
 }
 
-/*void MainFlow::sendTrip(Trip *trip) {
+void MainFlow::sendTrip(Trip *trip) {
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);
     boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
@@ -212,4 +208,4 @@ void MainFlow::sendCab(AbstractCab *cab) {
     oa << trip;
     s.flush();
     this->socket->sendData(serial_str);
-}*/
+}
