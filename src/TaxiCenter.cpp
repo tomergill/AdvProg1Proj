@@ -37,7 +37,9 @@ void TaxiCenter::addDriver(int id, int age, MartialStatus mstatus) {
     Driver *d = new Driver(id, age, mstatus, bfs, map->getFirst());
     drivers.push_back(d);
 }
-
+void TaxiCenter::addDriver(Driver* driver) {
+    drivers.push_back(driver);
+}
 /*
  * add taxi to taxicenter
  */
@@ -243,6 +245,15 @@ void TaxiCenter::deletetriplistener(int tripId) {
     }
 }
 
-void TaxiCenter::addDriver(Driver *d) {
-    drivers.push_back(d);
+
+AbstractNode *TaxiCenter::getFirst() {
+    return this->map->getFirst();
+}
+
+list<Driver *> TaxiCenter::getDrivers() {
+    return this->drivers;
+}
+
+list<Trip *> TaxiCenter::getTrips() {
+    return this->trips;
 }

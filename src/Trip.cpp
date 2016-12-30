@@ -66,7 +66,7 @@ void Trip::move() {
 void Trip::moveOneStep() {
     if (!course.empty() && !this->driver->getLocation()->operator==(
             *(this->map->getNode(this->end->getX(), this->end->getY())))) {
-        this->driver->move();
+        this->driver->move(&this->course);
     }
 }
 
@@ -101,9 +101,9 @@ double Trip::getTarif() {
 /*
  * get the course of trip
  */
-queue<AbstractNode *> *Trip::getCourse() {
-    return this->driver->getCourse();
-}
+/*queue<AbstractNode *> *Trip::getCourse() {
+    return this->course;
+}*/
 
 /*
  * get the driver of the trip
@@ -120,7 +120,6 @@ void Trip::setCourse() {
             this->map->getNode(this->start->getX(), this->start->getY()),
             this->map->getNode(this->end->getX(), this->end->getY()));
     this->map->newRoad();
-
 }
 
 /*
@@ -128,8 +127,8 @@ void Trip::setCourse() {
  */
 void Trip::setDriver(Driver *driver) {
     this->driver = driver;
-    if (driver != NULL)
-        this->driver->setCourse(&this->course);
+/*    if (driver != NULL)
+        this->driver->setCourse(&this->course);*/
 }
 
 /*

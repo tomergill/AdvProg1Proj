@@ -21,8 +21,9 @@ TripTimer::~TripTimer() {}
  * Called when time has passed, and moves the trip one step.
  */
 void TripTimer::tock(int time) {
-    if (time >= trip->getStartTime())
+    if (time >= trip->getStartTime()) {
         trip->moveOneStep();
+    }
 }
 
 /**

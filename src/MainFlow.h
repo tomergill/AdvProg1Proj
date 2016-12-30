@@ -9,6 +9,7 @@
 #include "TaxiCenter.h"
 #include <iostream>
 #include "LuxuryCab.h"
+#include "Socket.h"
 
 /*
  * this class runs our game
@@ -19,6 +20,9 @@ private:
     MapFactory *mapFactory;
     TaxiCenter *taxiCenter;
     int time;
+    Socket *socket;
+    Trip *trip;
+    Driver *driver;
 
     void flow();
 
@@ -34,6 +38,12 @@ public:
     MainFlow(MapFactory *factory);
 
     void startFlow(string mapInput);
+
+    void addDriver(int num);
+    //void sendTrip(Trip* trip);
+    void sendDriver(Driver *driver);
+
+    void sendCab(AbstractCab *cab);
 };
 
 #endif //TESTS_MAINFLOW_H

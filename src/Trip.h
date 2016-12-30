@@ -31,6 +31,7 @@ class Trip {
         ar & bfs;
         ar & course;
         ar & time;
+        ar & course;
     }
 private:
     int rideId;
@@ -67,7 +68,7 @@ public:
 
     void moveOneStep();
 
-    queue<AbstractNode *> *getCourse();
+    //queue<AbstractNode *> *getCourse();
 
     Driver *getDriver();
 

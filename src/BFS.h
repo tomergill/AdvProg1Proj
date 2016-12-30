@@ -14,6 +14,13 @@
 using namespace std;
 
 class BFS : public Algorithm {
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int version)
+    {
+        ar & boost::serialization::base_object<Algorithm>(*this);
+
+    }
 public:
     ~BFS();
     BFS();

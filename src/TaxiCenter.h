@@ -29,12 +29,11 @@ private:
     Map *map;
     BFS *bfs;
     list<TimeListener *> timers;
-
-    Driver *findClosestDriverToPoint(AbstractNode *p);
-
     void deletetriplistener(int tripId);
 
 public:
+    Driver *findClosestDriverToPoint(AbstractNode *p);
+
     void answerCall(int id, Point *start, Point *end, double tarif, int pass,
                     int startTime);
 
@@ -43,7 +42,7 @@ public:
     void addDriver(Driver *d);
 
     void addTaxi(AbstractCab *t);
-
+    AbstractNode* getFirst();
     void timePassed(int time);
 
     TaxiCenter(Map *m);
@@ -69,6 +68,10 @@ public:
     Trip *getTrip(int id);
 
     ~TaxiCenter();
+
+    list<Driver *> getDrivers();
+    list<Trip *> getTrips();
+
 };
 
 

@@ -1,5 +1,10 @@
-
 #include "MainFlow.h"
+#include "Udp.h"
+
+using namespace std;
+using namespace boost::iostreams;
+using namespace boost::archive;
+using namespace boost::iostreams;
 
 /*
  * c-tor of main flow
@@ -8,6 +13,8 @@ MainFlow::MainFlow(MapFactory *factory) {
     mapFactory = factory;
     taxiCenter = NULL;
     time = 0;
+    this->socket = new Udp(1, 12345);
+    this->trip = NULL;
 }
 
 /*
@@ -39,11 +46,14 @@ void MainFlow::flow() {
     while (input != 7) {
         switch (input) {
             case 1: //New Driver
-                cin >> driverId >> dummy >> age >> dummy >> mstatus >> dummy
-                    >> experience >> dummy >> cabId;
-                status = getStatusByChar(mstatus);
-                taxiCenter->addDriver(driverId, age, status);
-                taxiCenter->assignCabToDriver(cabId, driverId);
+                /* cin >> driverId >> dummy >> age >> dummy >> mstatus >> dummy
+                     >> experience >> dummy >> cabId;*/
+                //status = getStatusByChar(mstatus);
+                cin >> input;
+                /*taxiCenter->addDriver(driverId, age, status);
+                taxiCenter->assignCabToDriver(cabId, driverId);*/
+
+                this->addDriver(input);
                 break;
 
             case 2: //New Trip
@@ -71,12 +81,20 @@ void MainFlow::flow() {
                 break;
             case 9: //move trips
                 time++;
+                this->driver = this->taxiCenter->getDrivers().front();
+                if (this->trip == NULL)
+                    this->trip = this->taxiCenter->getTrips().front();
+                this->trip->setDriver(this->driver);
                 taxiCenter->timePassed(time);
+                this->sendDriver(this->driver);
+               // this->sendTrip(this->trip);
             default:
                 break;
         }
         cin >> input;
     }
+    this->driver->setLocation();
+    this->sendDriver(this->driver);
 }
 
 /**
@@ -135,3 +153,63 @@ CarColor MainFlow::getColorByChar(char c) {
             return CarColor::P;
     }
 }
+
+void MainFlow::addDriver(int num) {
+    while (num > 0) {
+        int input, driverId = 0, age = 0, experience = 0, cabId = 0, start_x = 0,
+                start_y = 0, end_x = 0, end_y = 0, pass_num = 0, rideId = 0,
+                taxi_type = 1, time1 = 0;
+        MartialStatus status = MartialStatus::S;
+        double tariff = 0.0;
+        CarColor color = CarColor::R;
+        CarManufactur manufactur = CarManufactur::F;
+        char dummy = ',', mstatus, cColor, manu;
+        //Udp udp(1, 12345);
+        this->socket->initialize();
+
+        char buffer[4096];
+        Driver *gp2;
+        // FactoryCab factoryCab;
+        // Cab* gp2;
+        this->socket->reciveData(buffer, sizeof(buffer));
+        char *end = buffer + 4095;
+        basic_array_source<char> device(buffer, end);
+        boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
+        binary_iarchive ia(s2);
+        ia >> gp2;
+        taxiCenter->addDriver(gp2);
+        taxiCenter->assignCabToDriver(cabId, gp2->getId());
+        this->sendCab(gp2->getTaxi());
+        num -= 1;
+    }
+}
+
+void MainFlow::sendDriver(Driver *driver) {
+    string serial_str;
+    back_insert_device<std::string> inserter(serial_str);
+    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+    binary_oarchive oa(s);
+    oa << driver;
+    s.flush();
+    this->socket->sendData(serial_str);
+}
+
+void MainFlow::sendCab(AbstractCab *cab) {
+    string serial_str;
+    back_insert_device<std::string> inserter(serial_str);
+    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+    binary_oarchive oa(s);
+    oa << cab;
+    s.flush();
+    this->socket->sendData(serial_str);
+}
+
+/*void MainFlow::sendTrip(Trip *trip) {
+    string serial_str;
+    back_insert_device<std::string> inserter(serial_str);
+    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+    binary_oarchive oa(s);
+    oa << trip;
+    s.flush();
+    this->socket->sendData(serial_str);
+}*/

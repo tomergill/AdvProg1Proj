@@ -31,7 +31,6 @@ class Driver {
         ar & km;
         ar & cab;
         ar & bfs;
-        ar & course;
         ar & location;
     }
 private:
@@ -44,11 +43,12 @@ private:
     int km;
     AbstractCab *cab;
     BFS *bfs;
-    queue<AbstractNode *> *course;
     AbstractNode *location;
 public:
     Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode* node);
-    
+
+    Driver();
+
     ~Driver();
 
     void changeTaxi(AbstractCab *t);
@@ -65,16 +65,17 @@ public:
 
     AbstractCab *getTaxi();
 
-    void setCourse(queue<AbstractNode *> *course);
+    //void setCourse(queue<AbstractNode *> *course);
 
     AbstractNode *getLocation();
 
-    queue<AbstractNode *> *getCourse();
+    //queue<AbstractNode *> *getCourse();
 
-    AbstractNode *move();
+    AbstractNode *move(queue<AbstractNode *> *queue1);
 
     int getKm() ;
-    
+    void setLocation();
+    void setCab(AbstractCab* cab);
 };
 
 
