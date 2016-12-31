@@ -54,6 +54,7 @@ client::~client() {
     delete socket;
     delete driver;
     delete trip;
+    delete cab;
 }
 
 /*
