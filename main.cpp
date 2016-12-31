@@ -10,12 +10,15 @@ using namespace std;
 using namespace boost::iostreams;
 using namespace boost::archive;
 using namespace boost::iostreams;
-// A main class.
+
+/*
+ * the main class of the server
+ */
 int main(int argc, char *argv[]) {
     int obsNum, i;
     string matrixInput, obstacle;
     MatrixFactory factory;
-    MainFlow mainFlow(&factory);
+    MainFlow mainFlow(&factory, atoi(argv[1]));
 
     getline(cin, matrixInput); //matrix size
     cin >> obsNum; //number of obstacles

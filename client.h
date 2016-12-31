@@ -14,6 +14,8 @@ public:
 
     client();
 
+    client(int port);
+
     void setCab();
 
     void sendDriver();

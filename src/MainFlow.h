@@ -37,13 +37,18 @@ public:
 
     MainFlow(MapFactory *factory);
 
+    MainFlow(MapFactory *factory, int num);
+
     void startFlow(string mapInput);
 
     void addDriver(int num);
-    void sendTrip(Trip* trip);
+
+    void sendTrip(Trip *trip);
+
     void sendDriver(Driver *driver);
 
     void sendCab(AbstractCab *cab);
+
     void sendMessage(int num);
 };
 

@@ -14,7 +14,7 @@ using namespace boost::iostreams;
  * the main class of the client
  */
 int main(int argc, char *argv[]) {
-    client *client1 = new client();
+    client *client1 = new client(atoi(argv[2]));
     client1->sendDriver(); // send the driver
     client1->setCab(); // set the cab to the driver
     client1->getDriverAndTrip(); // get trips and drivers
@@ -32,6 +32,16 @@ client::client(Driver *driver, Socket *socket, Trip *trip) : driver(driver), soc
  */
 client::client() {
     this->socket = new Udp(0, 12345);
+    this->driver = NULL;
+    this->cab = NULL;
+    this->trip = NULL;
+}
+
+/*
+ * c-tor of client
+ */
+client::client(int num) {
+    this->socket = new Udp(0, num);
     this->driver = NULL;
     this->cab = NULL;
     this->trip = NULL;

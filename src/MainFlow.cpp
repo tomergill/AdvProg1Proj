@@ -18,6 +18,17 @@ MainFlow::MainFlow(MapFactory *factory) {
 }
 
 /*
+ * c-tor of main flow
+ */
+MainFlow::MainFlow(MapFactory *factory, int port) {
+    mapFactory = factory;
+    taxiCenter = NULL;
+    time = 0;
+    this->socket = new Udp(1, port);
+    this->trip = NULL;
+}
+
+/*
  * start the taxi center
  */
 void MainFlow::startFlow(string mapInput) {
