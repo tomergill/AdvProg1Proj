@@ -80,7 +80,7 @@ bool MatrixMap::leftNeighbour(Point p) {
  * @return true or false.
  */
 bool MatrixMap::rightNeighbour(Point p) {
-    return (p.getX() < x);
+    return (p.getX() < x - 1);
 }
 
 /**
@@ -89,7 +89,7 @@ bool MatrixMap::rightNeighbour(Point p) {
  * @return true or false.
  */
 bool MatrixMap::upNeighbour(Point p) {
-    return (p.getY() < y);
+    return (p.getY() < y - 1);
 }
 
 /**
