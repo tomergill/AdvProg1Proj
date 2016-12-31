@@ -44,6 +44,7 @@ public:
     void sendDriver(Driver *driver);
 
     void sendCab(AbstractCab *cab);
+    void sendMessage(int num);
 };
 
 #endif //TESTS_MAINFLOW_H

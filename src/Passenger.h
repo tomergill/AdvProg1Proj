@@ -34,6 +34,8 @@ public:
 
     Passenger(AbstractNode *src, AbstractNode *dest);
 
+    Passenger();
+
 };
 
 

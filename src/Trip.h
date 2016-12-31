@@ -17,22 +17,16 @@
  */
 class Trip {
     friend class boost::serialization::access;
+
     template<class Archive>
-    void serialize(Archive &ar, const unsigned int version)
-    {
+    void serialize(Archive &ar, const unsigned int version) {
         ar & rideId;
-        ar & totalMPassed;
         ar & start;
         ar & end;
-        ar & passengersNum;
-        ar & passengersVec;
-        ar & tarif;
-        ar & driver;
-        ar & map;
-        ar & bfs;
-       // ar & course;
+        //ar & map;
         ar & time;
     }
+
 private:
     int rideId;
     int totalMPassed;
@@ -49,6 +43,8 @@ private:
 public:
     Trip(int id, Point *start, Point *end, double tarif, Map *map,
          int startTime);
+
+    Trip();
 
     ~Trip();
 
@@ -85,6 +81,8 @@ public:
     void finish();
 
     int getStartTime();
+
+    Point getEndPoint();
 };
 
 

@@ -65,11 +65,9 @@ void Trip::move() {
  */
 void Trip::moveOneStep() {
 
-    if (!course.empty() && driver != NULL)
-    {
+    if (!course.empty() && driver != NULL) {
         if (!this->driver->getLocation()->operator==(
-            *(this->map->getNode(this->end->getX(), this->end->getY()))))
-        {
+                *(this->map->getNode(this->end->getX(), this->end->getY())))) {
             this->driver->move(&this->course);
         }
     }
@@ -176,4 +174,10 @@ void Trip::finish() {
 
 int Trip::getStartTime() {
     return time;
+}
+
+Trip::Trip() {}
+
+Point Trip::getEndPoint() {
+    return *(this->end);
 }

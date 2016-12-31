@@ -34,3 +34,5 @@ AbstractNode *Passenger::getSource() {
     return this->source;
 }
 
+Passenger::Passenger() {}
+

@@ -63,6 +63,8 @@ MatrixMap::MatrixMap(int x1, int y1, vector<Point> *vec) {
     }
 }}
 
+MatrixMap::MatrixMap() {}
+
 /**
  * check if the node have a left neighbour.
  * @param p.
@@ -152,4 +154,4 @@ void MatrixMap::newRoad() {
 
 MatrixMap::~MatrixMap(){}
 
-
+BOOST_CLASS_EXPORT(MatrixMap)

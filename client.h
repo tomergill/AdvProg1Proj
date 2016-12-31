@@ -10,19 +10,28 @@
 
 class client {
 public:
-    client(Driver *driver, Socket *socket, Trip* trip);
+    client(Driver *driver, Socket *socket, Trip *trip);
 
     client();
 
     void setCab();
+
     void sendDriver();
-    void getDriver();
+
+    void getDriverAndTrip();
+
     virtual ~client();
+
+    int getMesseage();
+
 
 private:
     Driver *driver;
     Socket *socket;
-    AbstractCab* cab;
-    Trip* trip;
+    AbstractCab *cab;
+    Trip *trip;
+
+    MartialStatus getStatusByChar(char c);
 };
+
 #endif //EX3_CLIENT_H

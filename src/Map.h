@@ -4,7 +4,9 @@
 
 #ifndef EX1_TIHNUT_GRID_H
 #define EX1_TIHNUT_GRID_H
-
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/base_object.hpp>
 #include "Node.h"
 
 /**
@@ -18,6 +20,8 @@ class Map {
     }
 
 public:
+    Map();
+
     virtual AbstractNode *getFirst()=0;
 
     virtual void newRoad()=0;
@@ -30,5 +34,5 @@ public:
 
 
 };
-
+BOOST_SERIALIZATION_ASSUME_ABSTRACT(Map)
 #endif //EX1_TIHNUT_GRID_H
