@@ -9,7 +9,7 @@
 #include "Point.h"
 #include "AbstractNode.h"
 #include <boost/serialization/vector.hpp>
-#include <boost/serialization/queue.hpp>
+//#include <boost/serialization/queue.hpp>
 
 using namespace std;
 using namespace boost::archive;

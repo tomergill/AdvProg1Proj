@@ -2,7 +2,7 @@
 // Created by tomer on 12/1/16.
 //
 #include <boost/serialization/vector.hpp>
-#include <boost/serialization/queue.hpp>
+#include <boost/serialization/deque.hpp>
 
 #ifndef EX2_DRIVER_H
 #define EX2_DRIVER_H

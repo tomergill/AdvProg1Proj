@@ -13,6 +13,8 @@ Driver::Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *s
     this->totalPassengers = 0;
     this->totalSatisfaction = 0;
     this->km = 0;
+    this->cab = NULL;
+    this->totalExperience = 0;
 }
 
 Driver::~Driver() {

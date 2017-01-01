@@ -10,7 +10,7 @@
  * @return.
  */
 AbstractNode::AbstractNode() {
-
+    previousNode = NULL;
 }
 AbstractNode::~AbstractNode(){}
 /**
