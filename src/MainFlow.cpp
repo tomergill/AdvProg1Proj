@@ -98,7 +98,7 @@ void MainFlow::flow() {
                     this->driver = this->trip->getDriver();
                 }
                 taxiCenter->timePassed(time);
-                this->sendDriver(this->trip->getDriver());
+                this->sendDriver(this->driver);
                 break;
 
             default:
