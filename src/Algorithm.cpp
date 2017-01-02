@@ -4,4 +4,7 @@
 
 #include "Algorithm.h"
 
+/**
+ * Destructor.
+ */
 Algorithm::~Algorithm(){}

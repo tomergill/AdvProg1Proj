@@ -62,7 +62,7 @@ void TaxiCenter::timePassed(int time) {
      * possible.
      */
     for (it; it != trips.end(); it++) {
-        if ((*it)->getDriver() == NULL) {
+        if ((*it)->getDriver() == NULL && (*it)->getStartTime() >= time) {
             assignADriverToTrip(*it);
         }
     }
@@ -249,6 +249,10 @@ Trip *TaxiCenter::getTrip(int id) {
     }
 }
 
+/**
+ * Deletes the TripTimer related to the specified trip.
+ * @param tripId id of the trip.
+ */
 void TaxiCenter::deletetriplistener(int tripId) {
     list<TimeListener *>::iterator it = timers.begin();
     TripTimer *temp;
@@ -264,32 +268,56 @@ void TaxiCenter::deletetriplistener(int tripId) {
     }
 }
 
-
+/**
+ * @return The first node of the map.
+ */
 AbstractNode *TaxiCenter::getFirst() {
     return this->map->getFirst();
 }
 
+/**
+ * @return the list of drivers
+ */
 list<Driver *> TaxiCenter::getDrivers() {
     return this->drivers;
 }
 
+/**
+ * @return the list of trips
+ */
 list<Trip *> TaxiCenter::getTrips() {
     return this->trips;
 }
 
+/**
+ * Assigns a driver to teh specified trip.
+ * @param tripId id of the trip.
+ */
 void TaxiCenter::assignADriverToTrip(int tripId) {
     assignADriverToTrip(getTrip(tripId));
 }
 
+/**
+ * Assigns a driver to the specified trip.
+ * @param t pointer to trip.
+ */
 void TaxiCenter::assignADriverToTrip(Trip *t) {
     Driver *d = findClosestDriverToPoint(t->getStart());
     t->setDriver(d);
 }
 
+/**
+ * @param x x-value of point
+ * @param y y-value of point
+ * @return returns the (x,y) node
+ */
 AbstractNode *TaxiCenter::getNode(int x, int y) {
     return this->map->getNode(x, y);
 }
 
+/**
+ * @return the BFS.
+ */
 BFS *TaxiCenter::getBFS() {
     return this->bfs;
 }

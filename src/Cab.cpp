@@ -24,6 +24,9 @@ AbstractNode *Cab::move(queue<AbstractNode *> *course) {
     return node;
 }
 
+/**
+ * Destructor.
+ */
 Cab::~Cab() {
 
 }

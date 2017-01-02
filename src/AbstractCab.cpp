@@ -14,6 +14,9 @@ AbstractCab::AbstractCab(int id1, CarManufactur type1, CarColor color1) {
     this->passedKm = 0;
 }
 
+/**
+ * Destructor.
+ */
 AbstractCab::~AbstractCab() {
 
 }
@@ -25,6 +28,9 @@ int AbstractCab::getId() {
     return this->cabId;
 }
 
+/**
+ * @return how much km has passed
+ */
 int AbstractCab::getKm() {
     return passedKm;
 }

@@ -177,6 +177,10 @@ void MainFlow::sendTrip(Trip *trip) {
     this->socket->sendData(serial_str);
 }
 
+/**
+ * Sends a numerical message to client.
+ * @param num message
+ */
 void MainFlow::sendMessage(int num) {
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);

@@ -16,6 +16,9 @@ public:
      */
     virtual void tock(int time) = 0;
 
+    /**
+     * Destructor.
+     */
     virtual ~TimeListener();
 };
 

@@ -8,6 +8,9 @@
 #include "TimeListener.h"
 #include "Trip.h"
 
+/**
+ * Class that moves a trip when time has passed.
+ */
 class TripTimer : public TimeListener {
 private:
     Trip *trip;
