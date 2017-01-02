@@ -61,10 +61,8 @@ void TaxiCenter::timePassed(int time) {
      * checking if there are trips that need a driver, and assigning one if
      * possible.
      */
-    for (it; it != trips.end(); it++)
-    {
-        if ((*it)->getDriver() == NULL)
-        {
+    for (it; it != trips.end(); it++) {
+        if ((*it)->getDriver() == NULL) {
             assignADriverToTrip(*it);
         }
     }
@@ -283,8 +281,15 @@ void TaxiCenter::assignADriverToTrip(int tripId) {
     assignADriverToTrip(getTrip(tripId));
 }
 
-void TaxiCenter::assignADriverToTrip(Trip *t)
-{
+void TaxiCenter::assignADriverToTrip(Trip *t) {
     Driver *d = findClosestDriverToPoint(t->getStart());
     t->setDriver(d);
+}
+
+AbstractNode *TaxiCenter::getNode(int x, int y) {
+    return this->map->getNode(x, y);
+}
+
+BFS *TaxiCenter::getBFS() {
+    return this->bfs;
 }

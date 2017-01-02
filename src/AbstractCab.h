@@ -18,30 +18,36 @@ using namespace std;
 using namespace boost::archive;
 using namespace boost::serialization;
 
+
 class AbstractCab {
     friend class boost::serialization::access;
+
     template<class Archive>
-    void serialize(Archive &ar, const unsigned int version)
-    {
+    void serialize(Archive &ar, const unsigned int version) {
         ar & cabId;
         ar & passedKm;
         ar & type;
         ar & color;
     }
+
 protected:
     int cabId;
     int passedKm;
     CarManufactur type;
     CarColor color;
 public:
-    AbstractCab(){}
+    AbstractCab() {}
+
     AbstractCab(int id1, CarManufactur type1, CarColor color1);
 
     virtual int getId();
 
-    virtual AbstractNode *move(queue<AbstractNode*> *course)=0;
-    
+    virtual AbstractNode *move(queue<AbstractNode *> *course)=0;
+
     virtual int getKm();
+
+    virtual ~AbstractCab();
 };
+
 BOOST_SERIALIZATION_ASSUME_ABSTRACT(AbstractCab)
 #endif //EX3_TIHNUT_ABSTRACTTEXI_H

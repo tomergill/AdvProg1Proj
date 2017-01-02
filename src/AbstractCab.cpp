@@ -11,6 +11,11 @@ AbstractCab::AbstractCab(int id1, CarManufactur type1, CarColor color1) {
     this->cabId = id1;
     this->color = color1;
     this->type = type1;
+    this->passedKm = 0;
+}
+
+AbstractCab::~AbstractCab() {
+
 }
 
 /*
@@ -20,8 +25,7 @@ int AbstractCab::getId() {
     return this->cabId;
 }
 
-int AbstractCab::getKm()
-{
+int AbstractCab::getKm() {
     return passedKm;
 }
 

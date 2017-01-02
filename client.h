@@ -31,7 +31,6 @@ private:
     Driver *driver;
     Socket *socket;
     AbstractCab *cab;
-    Trip *trip;
 
     MartialStatus getStatusByChar(char c);
 };

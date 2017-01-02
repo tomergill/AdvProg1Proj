@@ -24,4 +24,8 @@ AbstractNode *Cab::move(queue<AbstractNode *> *course) {
     return node;
 }
 
+Cab::~Cab() {
+
+}
+
 BOOST_CLASS_EXPORT(Cab)

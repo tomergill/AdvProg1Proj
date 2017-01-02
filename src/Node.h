@@ -25,7 +25,7 @@ class Node : public AbstractNode {
     {
         ar & boost::serialization::base_object<AbstractNode>(*this);
         ar & p;
-        ar & arr;
+      //  ar & arr;
 
     }
 private:

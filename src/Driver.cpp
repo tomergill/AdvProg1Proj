@@ -80,3 +80,15 @@ void Driver::setCab(AbstractCab *cab) {
     this->cab = cab;
 }
 
+BFS *Driver::getBFS() {
+    return this->bfs;
+}
+
+void Driver::setLocation2(AbstractNode *node) {
+    this->location = node;
+}
+
+void Driver::setBFS(BFS *bfs) {
+    this->bfs = bfs;
+}
+

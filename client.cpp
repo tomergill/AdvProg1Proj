@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 /*
  * c-tor of client
  */
-client::client(Driver *driver, Socket *socket, Trip *trip) : driver(driver), socket(socket), trip(trip) {}
+client::client(Driver *driver, Socket *socket, Trip *trip) : driver(driver), socket(socket) {}
 
 /*
  * c-tor of client
@@ -34,7 +34,6 @@ client::client() {
     this->socket = new Udp(0, 12345);
     this->driver = NULL;
     this->cab = NULL;
-    this->trip = NULL;
 }
 
 /*
@@ -44,17 +43,19 @@ client::client(int num) {
     this->socket = new Udp(0, num);
     this->driver = NULL;
     this->cab = NULL;
-    this->trip = NULL;
 }
 
 /*
  * destrctor of client
  */
 client::~client() {
-    delete socket;
+    delete this->socket;
+    //  delete this->driver->getTaxi();
+    delete this->driver->getLocation();
+    delete this->driver->getBFS();
     delete driver;
-    delete trip;
-    delete cab;
+    //  delete trip;
+    //delete cab;
 }
 
 /*
@@ -69,6 +70,7 @@ void client::setCab() {
     binary_iarchive ia(s2);
     ia >> this->cab;
     this->driver->setCab(this->cab);
+    delete this->driver->getTaxi();
 }
 
 /*
@@ -93,15 +95,18 @@ void client::sendDriver() {
     oa << driver;
     s.flush();
     this->socket->sendData(serial_str);
+    //  delete bfs;
+    //  delete node;
+    // delete driver;
 }
 
 /*
  * get drivers and trips
  */
 void client::getDriverAndTrip() {
-    AbstractNode *node = NULL;
+    //  AbstractNode *node = NULL;
     while (true) {
-        if (this->trip == NULL) { // we get new trip
+/*        if (this->trip == NULL) { // we get new trip
             if (driver->getLocation() == NULL) {
                 break;
             }
@@ -124,24 +129,31 @@ void client::getDriverAndTrip() {
             if (num == 7) { // we need to finish the program
                 break;
             }
-        } else { // finish the program
-            Driver *driver;
-            char buffer[4096];
-            this->socket->reciveData(buffer, sizeof(buffer));
-            char *end = buffer + 4095;
-            basic_array_source<char> device(buffer, end);
-            boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(device);
-            binary_iarchive ia(s2);
-            ia >> driver;
-            if (driver->getLocation() == NULL) {
-                break;
-            }
-            this->driver = driver;
+        } else {*/ // finish the program
+        Driver *driver;
+        char buffer[4096];
+        this->socket->reciveData(buffer, sizeof(buffer));
+        char *end = buffer + 4095;
+        basic_array_source<char> device(buffer, end);
+        boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(device);
+        binary_iarchive ia(s2);
+        ia >> driver;
+        if (driver->getLocation() == NULL) {
+            delete driver->getLocation();
+            delete driver->getBFS();
+            delete driver;
+            break;
         }
+        // delete this->driver->getTaxi();
+        delete this->driver->getLocation();
+        delete this->driver->getBFS();
+        delete this->driver;
+        this->driver = driver;
     }
-    if (node != NULL) {
-        delete node;
-    }
+    /*  }
+      if (node != NULL) {
+          delete node;
+      }*/
 }
 
 /*
@@ -149,13 +161,13 @@ void client::getDriverAndTrip() {
  */
 int client::getMesseage() {
     int num = 0;
-    char buffer[4096];
-    this->socket->reciveData(buffer, sizeof(buffer));
-    char *end = buffer + 4095;
-    basic_array_source<char> device(buffer, end);
-    boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(device);
-    binary_iarchive ia(s2);
-    ia >> num;
+    /*  char buffer[4096];
+      this->socket->reciveData(buffer, sizeof(buffer));
+      char *end = buffer + 4095;
+      basic_array_source<char> device(buffer, end);
+      boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(device);
+      binary_iarchive ia(s2);
+      ia >> num;*/
     return num;
 }
 

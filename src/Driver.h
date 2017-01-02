@@ -17,22 +17,27 @@ enum MartialStatus {
 using namespace std;
 using namespace boost::archive;
 using namespace boost::serialization;
+
 class Driver {
     friend class boost::serialization::access;
+
     template<class Archive>
-    void serialize(Archive &ar, const unsigned int version)
-    {
+    void serialize(Archive &ar, const unsigned int version) {
         ar & id;
         ar & age;
         ar & mstatus;
-        ar & totalExperience;
-        ar & totalPassengers;
-        ar & totalSatisfaction;
-        ar & km;
-        ar & cab;
         ar & bfs;
         ar & location;
+
+        /*   ar & totalExperience;
+           ar & totalPassengers;
+           ar & totalSatisfaction;
+           ar & km;
+           ar & cab;
+           ar & bfs;
+           ar & location;*/
     }
+
 private:
     int id;
     int age;
@@ -45,7 +50,7 @@ private:
     BFS *bfs;
     AbstractNode *location;
 public:
-    Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode* node);
+    Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *node);
 
     Driver();
 
@@ -69,13 +74,21 @@ public:
 
     AbstractNode *getLocation();
 
+    BFS *getBFS();
+
+    void setLocation2(AbstractNode* node);
+
+    void setBFS(BFS* bfs);
+
     //queue<AbstractNode *> *getCourse();
 
     AbstractNode *move(queue<AbstractNode *> *queue1);
 
-    int getKm() ;
+    int getKm();
+
     void setLocation();
-    void setCab(AbstractCab* cab);
+
+    void setCab(AbstractCab *cab);
 };
 
 

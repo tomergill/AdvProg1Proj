@@ -71,12 +71,14 @@ public:
     ~TaxiCenter();
 
     list<Driver *> getDrivers();
-
+    BFS* getBFS();
     list<Trip *> getTrips();
 
     void assignADriverToTrip(int tripId);
 
     void assignADriverToTrip(Trip *t);
+
+    AbstractNode* getNode(int x, int y);
 };
 
 

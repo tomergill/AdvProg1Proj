@@ -90,11 +90,12 @@ void MainFlow::flow() {
                 time++;
                 //this->driver = this->taxiCenter->getDrivers().front();
                 if (this->trip == NULL) {
-                    this->sendMessage(9);
+                    //    this->sendMessage(9);
                     this->trip = this->taxiCenter->getTrips().front();
-                    this->trip->setDriver(NULL);
-                    this->sendTrip(this->trip);
+                    //    this->trip->setDriver(NULL);
+                    //    this->sendTrip(this->trip);
                     taxiCenter->assignADriverToTrip(trip);
+                    this->driver = this->trip->getDriver();
                 }
                 taxiCenter->timePassed(time);
                 this->sendDriver(this->trip->getDriver());
@@ -105,7 +106,9 @@ void MainFlow::flow() {
         }
         cin >> input;
     }
-    this->sendMessage(7);
+    // this->sendMessage(7);
+    this->driver->setLocation();
+    this->sendDriver(this->driver);
 }
 
 /*
@@ -123,6 +126,11 @@ void MainFlow::addDriver(int num) {
         boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
         binary_iarchive ia(s2);
         ia >> gp2;
+        AbstractNode *node = this->taxiCenter->getNode(0, 0);
+        delete gp2->getLocation();
+        delete gp2->getBFS();
+        gp2->setLocation2(node);
+        gp2->setBFS(this->taxiCenter->getBFS());
         taxiCenter->addDriver(gp2);
         taxiCenter->assignCabToDriver(cabId, gp2->getId());
         this->sendCab(gp2->getTaxi());
