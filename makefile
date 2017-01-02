@@ -1,10 +1,10 @@
-all: Server.out Client.out 
+all: server.out client.out 
 
-Server.out: main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o 
-	g++ -std=c++0x main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o  -lboost_serialization -I. -o Server.out
+server.out: main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o 
+	g++ -std=c++0x main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o  -lboost_serialization -I. -o server.out
 
-Client.out: client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o
-	g++ -std=c++0x client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o  -lboost_serialization -I. -o Client.out
+client.out: client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o
+	g++ -std=c++0x client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o  -lboost_serialization -I. -o client.out
 
 MapFactory.o: src/MapFactory.cpp src/MapFactory.h
 	g++ -std=c++0x -c src/MapFactory.cpp
