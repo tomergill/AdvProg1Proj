@@ -38,6 +38,8 @@ void MainFlow::startFlow(string mapInput) {
 
 MainFlow::~MainFlow() {
     delete taxiCenter;
+    if (socket != NULL)
+        delete socket;
 }
 
 /*

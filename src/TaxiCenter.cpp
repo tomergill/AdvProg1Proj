@@ -83,7 +83,7 @@ void TaxiCenter::timePassed(int time) {
             temp = *it;
             it = trips.erase(it);
             deletetriplistener(temp->getRideId());
-            //delete temp;
+            delete temp;
         } else {
             it++;
         }

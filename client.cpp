@@ -99,7 +99,7 @@ void client::sendDriver() {
  * get drivers and trips
  */
 void client::getDriverAndTrip() {
-    AbstractNode *node;
+    AbstractNode *node = NULL;
     while (true) {
         if (this->trip == NULL) { // we get new trip
             if (driver->getLocation() == NULL) {
