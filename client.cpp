@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 /*
  * c-tor of client
  */
-client::client(Driver *driver, Socket *socket, Trip *trip) : driver(driver), socket(socket) {}
+client::client(Driver *driver, Socket *socket) : driver(driver), socket(socket) {}
 
 /*
  * c-tor of client
@@ -50,7 +50,7 @@ client::client(int num) {
  */
 client::~client() {
     delete this->socket;
-    //  delete this->driver->getTaxi();
+  //  delete this->driver->getTaxi();
     delete this->driver->getLocation();
     delete this->driver->getBFS();
     delete driver;

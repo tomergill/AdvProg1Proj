@@ -10,7 +10,7 @@
 
 class client {
 public:
-    client(Driver *driver, Socket *socket, Trip *trip);
+    client(Driver *driver, Socket *socket);
 
     client();
 

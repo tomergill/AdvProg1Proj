@@ -25,8 +25,7 @@ class AbstractNode {
     void serialize(Archive &ar, const unsigned int version) {
         ar & flag;
         ar & distance;
-        ar & previousNode;
-
+      //  ar & previousNode;
     }
 
 private:
