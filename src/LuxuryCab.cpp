@@ -16,17 +16,21 @@ LuxuryCab::LuxuryCab(int id1, CarManufactur type1, CarColor color1) :
 AbstractNode *LuxuryCab::move(queue<AbstractNode *> *course) {
     AbstractNode *node;
     node = (*course).front();
-    this->passedKm+=1;
+    this->passedKm += 1;
     (*course).pop();
     if ((*course).front() != NULL) {
         node = (*course).front();
-        this->passedKm+=1;
+        this->passedKm += 1;
         (*course).pop();
-    } 
-    return node;
+    }
+    if (!course->empty()) {
+        return course->front();
+    } else {
+        return node;
+    }
 }
 
-LuxuryCab::~LuxuryCab(){}
+LuxuryCab::~LuxuryCab() {}
 
 LuxuryCab::LuxuryCab() {}
 

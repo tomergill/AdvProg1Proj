@@ -5,9 +5,17 @@
 #include <stack>
 #include "BFS.h"
 
+/**
+ * Constructor.
+ */
 BFS::BFS() {
 }
 
+/**
+ * @param node start
+ * @param finish finish
+ * @return queue with points that are the shortest route from start to finish
+ */
 queue<AbstractNode *> BFS::smallestRoad(AbstractNode *node, AbstractNode *finish) {
     queue<AbstractNode *> queue;
     node->setDistance(0);
@@ -53,6 +61,10 @@ queue<AbstractNode *> BFS::smallestRoad(AbstractNode *node, AbstractNode *finish
         }
     }
 }
+
+/**
+ * Destructor
+ */
 BFS::~BFS(){
 
 }
