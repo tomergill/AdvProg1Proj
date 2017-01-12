@@ -41,6 +41,7 @@ private:
     int time;
     pthread_t pthread;
     pthread_mutex_t pthread_mutex;
+    bool finishh;
 
 public:
     Trip(int id, Point *start, Point *end, double tarif, Map *map,
@@ -88,7 +89,7 @@ public:
 
     pthread_t &getPthread();
 
-    pthread_mutex_t &getPthread_mutex() const;
+    pthread_mutex_t &getPthread_mutex() ;
 
     BFS *getBfs();
 
@@ -101,6 +102,34 @@ public:
     int getTime();
 
     void settingCourse(queue<AbstractNode *> course);
+
+    bool isFinish() const;
+
+    void setStart(Point *start);
+
+    void setEnd(Point *end);
+
+    void setPassengersNum(int passengersNum);
+
+    void setPassengersVec(const vector<Passenger *> &passengersVec);
+
+    void setTarif(double tarif);
+
+    void setMap(Map *map);
+
+    void setBfs(BFS *bfs);
+
+    void setCourse(const queue<AbstractNode *> &course);
+
+    void setTime(int time);
+
+    void setPthread(pthread_t pthread);
+
+    void setPthread_mutex(const pthread_mutex_t &pthread_mutex);
+
+    void setFinish(bool finish);
+
+    bool isFinishh() ;
 };
 
 

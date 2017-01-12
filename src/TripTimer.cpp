@@ -22,7 +22,9 @@ TripTimer::~TripTimer() {}
  */
 void TripTimer::tock(int time) {
     if (time > trip->getStartTime()) {
-        trip->moveOneStep();
+        if (trip->isFinish()) {
+            trip->moveOneStep();
+        }
     }
 }
 

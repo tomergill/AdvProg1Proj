@@ -14,6 +14,7 @@
 #include "TripTimer.h"
 #include <list>
 #include <iostream>
+#include <thread_db.h>
 
 using namespace std;
 
@@ -29,9 +30,7 @@ private:
     Map *map;
     BFS *bfs;
     list<TimeListener *> timers;
-
-    void createTread(Trip *trip);
-
+    thread_t thread;
     void deletetriplistener(int tripId);
 
 public:
@@ -63,6 +62,8 @@ public:
     int getNumberOfCabs();
 
     int getNumberOfTrips();
+
+    void createTread(Trip *trip);
 
     void assignCabToDriver(int cabId, int driverId);
 

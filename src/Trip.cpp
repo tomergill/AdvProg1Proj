@@ -1,7 +1,7 @@
 //
 // Created by tomer on 12/1/16.
 //
-
+#include <pthread.h>
 #include "Trip.h"
 
 /*
@@ -20,6 +20,7 @@ Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
     this->map = map;
     this->bfs = new BFS();
     this->time = startTime;
+    this->finishh = false;
 }
 
 /*
@@ -64,13 +65,12 @@ void Trip::move() {
  * move the trip
  */
 void Trip::moveOneStep() {
-
-    if (!course.empty() && driver != NULL) {
-        if (!this->driver->getLocation()->operator==(
-                *(this->map->getNode(this->end->getX(), this->end->getY())))) {
-            this->driver->move(&this->course);
+        if (!course.empty() && driver != NULL) {
+            if (!this->driver->getLocation()->operator==(
+                    *(this->map->getNode(this->end->getX(), this->end->getY())))) {
+                this->driver->move(&this->course);
+            }
         }
-    }
 }
 
 /*
@@ -121,12 +121,16 @@ Driver *Trip::getDriver() {
 void *Trip::setCourse(void *trip2) {
     Trip *trip = (Trip *) trip2;
     pthread_mutex_lock(&trip->getPthread_mutex());
-    cout << "start/n";
+    cout << "start" << endl;
     queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getFirst(),
                                                                 trip->getMap()->getNode(trip->end->getX(),
                                                                                         trip->end->getY()));
     trip->settingCourse(course);
     trip->getMap()->newRoad();
+    trip->setFinish(true);
+    pthread_mutex_unlock(&trip->getPthread_mutex());
+    cout << "end" << endl;
+    cout << "finish bfs 1" << endl;
 }
 
 /*
@@ -190,7 +194,7 @@ pthread_t &Trip::getPthread() {
     return pthread;
 }
 
-pthread_mutex_t &Trip::getPthread_mutex() const {
+pthread_mutex_t &Trip::getPthread_mutex() {
     return pthread_mutex;
 }
 
@@ -216,4 +220,60 @@ int Trip::getTime() {
 
 void Trip::settingCourse(queue<AbstractNode *> course) {
     this->course = course;
+}
+
+bool Trip::isFinish() const {
+    return finishh;
+}
+
+void Trip::setStart(Point *start) {
+    Trip::start = start;
+}
+
+void Trip::setEnd(Point *end) {
+    Trip::end = end;
+}
+
+void Trip::setPassengersNum(int passengersNum) {
+    Trip::passengersNum = passengersNum;
+}
+
+void Trip::setPassengersVec(const vector<Passenger *> &passengersVec) {
+    Trip::passengersVec = passengersVec;
+}
+
+void Trip::setTarif(double tarif) {
+    Trip::tarif = tarif;
+}
+
+void Trip::setMap(Map *map) {
+    Trip::map = map;
+}
+
+void Trip::setBfs(BFS *bfs) {
+    Trip::bfs = bfs;
+}
+
+void Trip::setCourse(const queue<AbstractNode *> &course) {
+    Trip::course = course;
+}
+
+void Trip::setTime(int time) {
+    Trip::time = time;
+}
+
+void Trip::setPthread(pthread_t pthread) {
+    Trip::pthread = pthread;
+}
+
+void Trip::setPthread_mutex(const pthread_mutex_t &pthread_mutex) {
+    Trip::pthread_mutex = pthread_mutex;
+}
+
+void Trip::setFinish(bool finish) {
+    Trip::finishh = finish;
+}
+
+bool Trip::isFinishh() {
+    return finishh;
 }

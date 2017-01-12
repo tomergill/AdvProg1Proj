@@ -3,6 +3,9 @@
 //
 
 #include "TaxiCenter.h"
+#include <pthread.h>
+
+pthread_mutex_t Lock = PTHREAD_MUTEX_INITIALIZER;
 
 /*
  * add passenger and create a trip for him
@@ -98,6 +101,7 @@ TaxiCenter::TaxiCenter(Map *m) {
     cabs = {};
     trips = {};
     timers = {};
+    this->thread = NULL;
 }
 
 /*
@@ -323,7 +327,11 @@ BFS *TaxiCenter::getBFS() {
 }
 
 void TaxiCenter::createTread(Trip *trip) {
-
+    int status = pthread_create(&trip->getPthread(), NULL, trip->setCourse, (void *) trip);
+    if (status) {
+        cout << "very bad" << endl;
+    }
+    cout << "good" << endl;
 }
 
 
