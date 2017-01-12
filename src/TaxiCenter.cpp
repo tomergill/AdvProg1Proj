@@ -13,7 +13,7 @@ TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
     int i;
 
     Trip *t = new Trip(id, start, end, tarif, map, startTime);
-    t->setCourse();
+    this->createTread(t);
     trips.push_back(t);
     for (i = 0; i < pass; i++) {
         //int start_x, start_y, end_x, end_y;
@@ -321,3 +321,9 @@ AbstractNode *TaxiCenter::getNode(int x, int y) {
 BFS *TaxiCenter::getBFS() {
     return this->bfs;
 }
+
+void TaxiCenter::createTread(Trip *trip) {
+
+}
+
+

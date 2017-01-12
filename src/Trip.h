@@ -39,6 +39,8 @@ private:
     BFS *bfs;
     queue<AbstractNode *> course;
     int time;
+    pthread_t pthread;
+    pthread_mutex_t pthread_mutex;
 
 public:
     Trip(int id, Point *start, Point *end, double tarif, Map *map,
@@ -60,7 +62,7 @@ public:
 
     double getTarif();
 
-    void setCourse();
+    static void *setCourse(void *course);
 
     void moveOneStep();
 
@@ -83,6 +85,22 @@ public:
     int getStartTime();
 
     Point getEndPoint();
+
+    pthread_t &getPthread();
+
+    pthread_mutex_t &getPthread_mutex() const;
+
+    BFS *getBfs();
+
+    const vector<Passenger *> &getPassengersVec();
+
+    Map *getMap();
+
+    const queue<AbstractNode *> &getCourse();
+
+    int getTime();
+
+    void settingCourse(queue<AbstractNode *> course);
 };
 
 

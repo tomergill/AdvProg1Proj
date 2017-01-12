@@ -3,7 +3,6 @@
 // Created by alon on 01/12/16.
 //
 
-#include "gtest/gtest.h"
 #include "../src/AbstractNode.h"
 #include "../src/Node.h"
 

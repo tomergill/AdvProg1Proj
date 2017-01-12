@@ -19,7 +19,7 @@ Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
     this->totalMPassed = 0;
     this->map = map;
     this->bfs = new BFS();
-    time = startTime;
+    this->time = startTime;
 }
 
 /*
@@ -118,11 +118,15 @@ Driver *Trip::getDriver() {
 /*
  * set the course of the trip
  */
-void Trip::setCourse() {
-    this->course = this->bfs->smallestRoad(
-            this->map->getNode(this->start->getX(), this->start->getY()),
-            this->map->getNode(this->end->getX(), this->end->getY()));
-    this->map->newRoad();
+void *Trip::setCourse(void *trip2) {
+    Trip *trip = (Trip *) trip2;
+    pthread_mutex_lock(&trip->getPthread_mutex());
+    cout << "start/n";
+    queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getFirst(),
+                                                                trip->getMap()->getNode(trip->end->getX(),
+                                                                                        trip->end->getY()));
+    trip->settingCourse(course);
+    trip->getMap()->newRoad();
 }
 
 /*
@@ -180,4 +184,36 @@ Trip::Trip() {}
 
 Point Trip::getEndPoint() {
     return *(this->end);
+}
+
+pthread_t &Trip::getPthread() {
+    return pthread;
+}
+
+pthread_mutex_t &Trip::getPthread_mutex() const {
+    return pthread_mutex;
+}
+
+BFS *Trip::getBfs() {
+    return bfs;
+}
+
+const vector<Passenger *> &Trip::getPassengersVec() {
+    return passengersVec;
+}
+
+Map *Trip::getMap() {
+    return map;
+}
+
+const queue<AbstractNode *> &Trip::getCourse() {
+    return course;
+}
+
+int Trip::getTime() {
+    return time;
+}
+
+void Trip::settingCourse(queue<AbstractNode *> course) {
+    this->course = course;
 }

@@ -88,12 +88,8 @@ void MainFlow::flow() {
                 break;
             case 9: //move trips
                 time++;
-                //this->driver = this->taxiCenter->getDrivers().front();
                 if (this->trip == NULL) {
-                    //    this->sendMessage(9);
                     this->trip = this->taxiCenter->getTrips().front();
-                    //    this->trip->setDriver(NULL);
-                    //    this->sendTrip(this->trip);
                     taxiCenter->assignADriverToTrip(trip);
                     this->driver = this->trip->getDriver();
                 }

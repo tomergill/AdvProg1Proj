@@ -30,6 +30,8 @@ private:
     BFS *bfs;
     list<TimeListener *> timers;
 
+    void createTread(Trip *trip);
+
     void deletetriplistener(int tripId);
 
 public:
@@ -43,7 +45,9 @@ public:
     void addDriver(Driver *d);
 
     void addTaxi(AbstractCab *t);
-    AbstractNode* getFirst();
+
+    AbstractNode *getFirst();
+
     void timePassed(int time);
 
     TaxiCenter(Map *m);
@@ -71,14 +75,16 @@ public:
     ~TaxiCenter();
 
     list<Driver *> getDrivers();
-    BFS* getBFS();
+
+    BFS *getBFS();
+
     list<Trip *> getTrips();
 
     void assignADriverToTrip(int tripId);
 
     void assignADriverToTrip(Trip *t);
 
-    AbstractNode* getNode(int x, int y);
+    AbstractNode *getNode(int x, int y);
 };
 
 
