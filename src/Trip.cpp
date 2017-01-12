@@ -65,12 +65,12 @@ void Trip::move() {
  * move the trip
  */
 void Trip::moveOneStep() {
-        if (!course.empty() && driver != NULL) {
-            if (!this->driver->getLocation()->operator==(
-                    *(this->map->getNode(this->end->getX(), this->end->getY())))) {
-                this->driver->move(&this->course);
-            }
+    if (!course.empty() && driver != NULL) {
+        if (!this->driver->getLocation()->operator==(
+                *(this->map->getNode(this->end->getX(), this->end->getY())))) {
+            this->driver->move(&this->course);
         }
+    }
 }
 
 /*
@@ -122,7 +122,8 @@ void *Trip::setCourse(void *trip2) {
     Trip *trip = (Trip *) trip2;
     pthread_mutex_lock(&trip->getPthread_mutex());
     cout << "start" << endl;
-    queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getFirst(),
+    queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getNode(trip->start->getX(),
+                                                                                        trip->start->getY()),
                                                                 trip->getMap()->getNode(trip->end->getX(),
                                                                                         trip->end->getY()));
     trip->settingCourse(course);
@@ -130,7 +131,6 @@ void *Trip::setCourse(void *trip2) {
     trip->setFinish(true);
     pthread_mutex_unlock(&trip->getPthread_mutex());
     cout << "end" << endl;
-    cout << "finish bfs 1" << endl;
 }
 
 /*
