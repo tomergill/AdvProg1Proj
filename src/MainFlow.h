@@ -24,7 +24,10 @@ private:
     Trip *trip;
     Driver *driver;
 
+
     void flow();
+
+    int ports[100];
 
     MartialStatus getStatusByChar(char c);
 
@@ -43,13 +46,13 @@ public:
 
     void addDriver(int num);
 
-    void sendTrip(Trip *trip);
+    void sendTrip(Trip *trip, int descriptor);
 
-    void sendDriver(Driver *driver);
+    void sendDriver(Driver *driver, int descriptor);
 
-    void sendCab(AbstractCab *cab);
+    void sendCab(AbstractCab *cab, int descriptor);
 
-    void sendMessage(int num);
+    void sendMessage(int num, int descriptor);
 };
 
 #endif //TESTS_MAINFLOW_H

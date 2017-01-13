@@ -75,7 +75,7 @@ public:
     * The Function operation: sending the input data to the socket         *
     * who connect to this socket. pure virtual method					   *
     ***********************************************************************/
-    virtual int sendData(string data) = 0;
+    virtual int sendData(string data,int acceptDescriptor) = 0;
 
     /***********************************************************************
     * function name: recive	`											   *
@@ -84,17 +84,11 @@ public:
     * The Function operation: getting data from the other socket and print *
     * the data															   *
     ***********************************************************************/
-    virtual int reciveData(char *buffer, int size) = 0;
+    virtual int reciveData(char *buffer, int size,int acceptDescriptor) = 0;
+
+    int acceptDescriptorCommunicate();
 
 
-    /***********************************************************************
-    * function name: recive	`											   *
-    * The Input: none										               *
-    * The output: int number representing the return status	               *
-    * The Function operation: getting data from the other socket and print *
-    * the data															   *
-    ***********************************************************************/
-    virtual int sendData(string data, int len) = 0;
 };
 
 #endif /* SOCKET_H_ */

@@ -1,5 +1,6 @@
 #include "MainFlow.h"
 #include "Udp.h"
+#include "Tcp.h"
 
 using namespace std;
 using namespace boost::iostreams;
@@ -13,7 +14,7 @@ MainFlow::MainFlow(MapFactory *factory) {
     mapFactory = factory;
     taxiCenter = NULL;
     time = 0;
-    this->socket = new Udp(1, 12345);
+    this->socket = new Tcp(1, 12345);
     this->trip = NULL;
 }
 
@@ -24,8 +25,11 @@ MainFlow::MainFlow(MapFactory *factory, int port) {
     mapFactory = factory;
     taxiCenter = NULL;
     time = 0;
-    this->socket = new Udp(1, port);
+    this->socket = new Tcp(1, port);
     this->trip = NULL;
+    for (int i = 0; i < 100; i++) {
+        this->ports[i] = -1;
+    }
 }
 
 /*
@@ -94,7 +98,7 @@ void MainFlow::flow() {
                     this->driver = this->trip->getDriver();
                 }
                 taxiCenter->timePassed(time);
-                this->sendDriver(this->driver);
+                this->sendDriver(this->driver, this->ports[this->driver->getId()]);
                 break;
 
             default:
@@ -103,20 +107,22 @@ void MainFlow::flow() {
         cin >> input;
     }
     // this->sendMessage(7);
-    this->driver->setLocation();
-    this->sendDriver(this->driver);
+    /* this->driver->setLocation();
+     this->sendDriver(this->driver, this->ports[this->driver->getId()]);*/
+    exit(0);
 }
 
 /*
  * get the driver from the client
  */
 void MainFlow::addDriver(int num) {
+    this->socket->initialize();
     while (num > 0) {
         int cabId = 0;
-        this->socket->initialize();
+        int port = this->socket->acceptDescriptorCommunicate();
         char buffer[4096];
         Driver *gp2;
-        this->socket->reciveData(buffer, sizeof(buffer));
+        this->socket->reciveData(buffer, sizeof(buffer), port);
         char *end = buffer + 4095;
         basic_array_source<char> device(buffer, end);
         boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
@@ -129,7 +135,8 @@ void MainFlow::addDriver(int num) {
         gp2->setBFS(this->taxiCenter->getBFS());
         taxiCenter->addDriver(gp2);
         taxiCenter->assignCabToDriver(cabId, gp2->getId());
-        this->sendCab(gp2->getTaxi());
+        this->ports[gp2->getId()] = port;
+        this->sendCab(gp2->getTaxi(), port);
         num -= 1;
     }
 }
@@ -137,54 +144,54 @@ void MainFlow::addDriver(int num) {
 /*
  * send the new location of the driver to the client
  */
-void MainFlow::sendDriver(Driver *driver) {
+void MainFlow::sendDriver(Driver *driver, int descriptor) {
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);
     boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
     binary_oarchive oa(s);
     oa << driver;
     s.flush();
-    this->socket->sendData(serial_str);
+    this->socket->sendData(serial_str, descriptor);
 }
 
 /*
  * send the cab of the driver to the client
  */
-void MainFlow::sendCab(AbstractCab *cab) {
+void MainFlow::sendCab(AbstractCab *cab, int descriptor) {
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);
     boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
     binary_oarchive oa(s);
     oa << cab;
     s.flush();
-    this->socket->sendData(serial_str);
+    this->socket->sendData(serial_str, descriptor);
 }
 
 /*
  * send the trip the driver have now
  */
-void MainFlow::sendTrip(Trip *trip) {
+void MainFlow::sendTrip(Trip *trip, int descriptor) {
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);
     boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
     binary_oarchive oa(s);
     oa << trip;
     s.flush();
-    this->socket->sendData(serial_str);
+    this->socket->sendData(serial_str, descriptor);
 }
 
 /**
  * Sends a numerical message to client.
  * @param num message
  */
-void MainFlow::sendMessage(int num) {
+void MainFlow::sendMessage(int num, int descriptor) {
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);
     boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
     binary_oarchive oa(s);
     oa << num;
     s.flush();
-    this->socket->sendData(serial_str);
+    this->socket->sendData(serial_str, descriptor);
 }
 
 /**

@@ -7,7 +7,6 @@
 #include "Socket.h"
 #include <unistd.h>
 
-
 #define NONE 0
 
 /***********************************************************************
@@ -34,6 +33,5 @@ Socket::Socket() {
 Socket::~Socket() {
     close(this->socketDescriptor);
 }
-
 
 

@@ -28,7 +28,7 @@ class MatrixMap : public Map {
 
 private:
     int x, y;
-    Node array[10][10];
+    Node array[2000][2000];
 
 public:
     MatrixMap(int x1, int y1, vector<Point> *vec);

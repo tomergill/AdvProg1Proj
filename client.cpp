@@ -4,6 +4,7 @@
 #include "src/Socket.h"
 #include "src/Udp.h"
 #include "client.h"
+#include "src/Tcp.h"
 
 using namespace std;
 using namespace boost::iostreams;
@@ -31,7 +32,7 @@ client::client(Driver *driver, Socket *socket) : driver(driver), socket(socket) 
  * c-tor of client
  */
 client::client() {
-    this->socket = new Udp(0, 12345);
+    this->socket = new Tcp(0, 12345);
     this->driver = NULL;
     this->cab = NULL;
 }
@@ -40,7 +41,7 @@ client::client() {
  * c-tor of client
  */
 client::client(int num) {
-    this->socket = new Udp(0, num);
+    this->socket = new Tcp(0, num);
     this->driver = NULL;
     this->cab = NULL;
 }
@@ -50,7 +51,7 @@ client::client(int num) {
  */
 client::~client() {
     delete this->socket;
-  //  delete this->driver->getTaxi();
+    //  delete this->driver->getTaxi();
     delete this->driver->getLocation();
     delete this->driver->getBFS();
     delete driver;
@@ -63,13 +64,14 @@ client::~client() {
  */
 void client::setCab() {
     char buffer[4096];
-    this->socket->reciveData(buffer, sizeof(buffer));
+    this->socket->reciveData(buffer, sizeof(buffer), this->socket->acceptDescriptorCommunicate());
     char *end = buffer + 4095;
     basic_array_source<char> device(buffer, end);
     boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(device);
     binary_iarchive ia(s2);
     ia >> this->cab;
     this->driver->setCab(this->cab);
+    cout << "the client got his cab" << endl;
     delete this->driver->getTaxi();
 }
 
@@ -81,6 +83,7 @@ void client::sendDriver() {
     MartialStatus status = MartialStatus::S;
     char dummy = ',', mstatus;
     this->socket->initialize();
+    int port = this->socket->acceptDescriptorCommunicate();
     cin >> driverId >> dummy >> age >> dummy >> mstatus >> dummy
         >> experience >> dummy >> cabId;
     status = getStatusByChar(mstatus);
@@ -94,7 +97,7 @@ void client::sendDriver() {
     binary_oarchive oa(s);
     oa << driver;
     s.flush();
-    this->socket->sendData(serial_str);
+    this->socket->sendData(serial_str, port);
     //  delete bfs;
     //  delete node;
     // delete driver;
@@ -132,12 +135,13 @@ void client::getDriverAndTrip() {
         } else {*/ // finish the program
         Driver *driver;
         char buffer[4096];
-        this->socket->reciveData(buffer, sizeof(buffer));
+        this->socket->reciveData(buffer, sizeof(buffer), this->socket->acceptDescriptorCommunicate());
         char *end = buffer + 4095;
         basic_array_source<char> device(buffer, end);
         boost::iostreams::stream<boost::iostreams::basic_array_source<char>> s2(device);
         binary_iarchive ia(s2);
         ia >> driver;
+        cout << "the client got his current point" << endl;
         if (driver->getLocation() == NULL) {
             delete driver->getLocation();
             delete driver->getBFS();
