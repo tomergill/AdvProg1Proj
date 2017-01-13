@@ -3,6 +3,8 @@
 //
 #include <pthread.h>
 #include "Trip.h"
+#include "../easyloggingpp-8.91/easylogging++.h"
+
 
 /*
  * c tor of trip
@@ -21,6 +23,26 @@ Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
     this->bfs = new BFS();
     this->time = startTime;
     this->finishh = false;
+}
+
+/*
+ * c tor of trip
+ */
+Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
+           int startTime, pthread_mutex_t lock) {
+    this->rideId = id;
+    this->start = start;
+    this->end = end;
+    this->tarif = tarif;
+    this->driver = NULL;
+    this->passengersNum = 0;
+    this->passengersVec = {};
+    this->totalMPassed = 0;
+    this->map = map;
+    this->bfs = new BFS();
+    this->time = startTime;
+    this->finishh = false;
+    this->pthread_mutex = lock;
 }
 
 /*
@@ -121,7 +143,9 @@ Driver *Trip::getDriver() {
 void *Trip::setCourse(void *trip2) {
     Trip *trip = (Trip *) trip2;
     pthread_mutex_lock(&trip->getPthread_mutex());
-    cout << "start" << endl;
+/*
+    LINFO << "start";
+*/
     queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getNode(trip->start->getX(),
                                                                                         trip->start->getY()),
                                                                 trip->getMap()->getNode(trip->end->getX(),
@@ -130,7 +154,9 @@ void *Trip::setCourse(void *trip2) {
     trip->getMap()->newRoad();
     trip->setFinish(true);
     pthread_mutex_unlock(&trip->getPthread_mutex());
-    cout << "end" << endl;
+/*
+    LINFO << "end";
+*/
 }
 
 /*

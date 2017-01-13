@@ -46,7 +46,8 @@ private:
 public:
     Trip(int id, Point *start, Point *end, double tarif, Map *map,
          int startTime);
-
+    Trip(int id, Point *start, Point *end, double tarif, Map *map,
+         int startTime,pthread_mutex_t lock);
     Trip();
 
     ~Trip();

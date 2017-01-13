@@ -37,7 +37,7 @@ public:
     Driver *findClosestDriverToPoint(AbstractNode *p);
 
     void answerCall(int id, Point *start, Point *end, double tarif, int pass,
-                    int startTime);
+                    int startTime,pthread_mutex_t lock);
 
     void addDriver(int id, int age, MartialStatus mstatus);
 
@@ -86,6 +86,9 @@ public:
     void assignADriverToTrip(Trip *t);
 
     AbstractNode *getNode(int x, int y);
+
+
+    void deleteFirstDriver();
 };
 
 

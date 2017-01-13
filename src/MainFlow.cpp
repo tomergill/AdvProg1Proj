@@ -6,6 +6,7 @@ using namespace std;
 using namespace boost::iostreams;
 using namespace boost::archive;
 using namespace boost::iostreams;
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 
 /*
  * c-tor of main flow
@@ -73,7 +74,7 @@ void MainFlow::flow() {
                     >> tariff >> dummy >> time1;
                 taxiCenter->answerCall(rideId, new Point(start_x, start_y),
                                        new Point(end_x, end_y), tariff,
-                                       pass_num, time1);
+                                       pass_num, time1, lock);
                 break;
             case 3: //New Cab
                 cin >> cabId >> dummy >> taxi_type >> dummy >> manu >> dummy
@@ -106,10 +107,26 @@ void MainFlow::flow() {
         }
         cin >> input;
     }
-    // this->sendMessage(7);
-    /* this->driver->setLocation();
-     this->sendDriver(this->driver, this->ports[this->driver->getId()]);*/
-    exit(0);
+    ///
+    Driver *driver = this->taxiCenter->getDrivers().front();
+    while (this->taxiCenter->getDrivers().size() > 0) {
+        for (int i = 0; i < 100; i++) {
+            if (driver->getId() == i) {
+                if (this->ports[i] != -1) {
+                    //pthread_mutex_destroy(&lock);
+                    // this->sendMessage(7);
+                    /* this->driver->setLocation();
+                     this->sendDriver(this->driver, this->ports[this->driver->getId()]);*/
+                    driver->setLocation();
+                    this->sendDriver(driver, this->ports[driver->getId()]);
+                    this->taxiCenter->deleteFirstDriver();
+                    delete driver;
+                    driver = this->taxiCenter->getDrivers().front();
+                }
+                break;
+            }
+        }
+    }
 }
 
 /*

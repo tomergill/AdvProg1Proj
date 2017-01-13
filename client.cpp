@@ -5,6 +5,8 @@
 #include "src/Udp.h"
 #include "client.h"
 #include "src/Tcp.h"
+/*#include "easyloggingpp-8.91/easylogging++.h"
+_INITIALIZE_EASYLOGGINGPP*/
 
 using namespace std;
 using namespace boost::iostreams;
@@ -143,6 +145,8 @@ void client::getDriverAndTrip() {
         ia >> driver;
         cout << "the client got his current point" << endl;
         if (driver->getLocation() == NULL) {
+            cout << "close client" << endl;
+            cout << "client number:" << this->driver->getId() << endl;
             delete driver->getLocation();
             delete driver->getBFS();
             delete driver;

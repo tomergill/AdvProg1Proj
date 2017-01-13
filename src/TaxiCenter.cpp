@@ -3,6 +3,7 @@
 //
 
 #include "TaxiCenter.h"
+#include "../easyloggingpp-8.91/easylogging++.h"
 #include <pthread.h>
 
 pthread_mutex_t Lock = PTHREAD_MUTEX_INITIALIZER;
@@ -12,10 +13,10 @@ pthread_mutex_t Lock = PTHREAD_MUTEX_INITIALIZER;
  */
 void
 TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
-                       int startTime) {
+                       int startTime, pthread_mutex_t lock) {
     int i;
 
-    Trip *t = new Trip(id, start, end, tarif, map, startTime);
+    Trip *t = new Trip(id, start, end, tarif, map, startTime, lock);
     this->createTread(t);
     trips.push_back(t);
     for (i = 0; i < pass; i++) {
@@ -329,9 +330,18 @@ BFS *TaxiCenter::getBFS() {
 void TaxiCenter::createTread(Trip *trip) {
     int status = pthread_create(&trip->getPthread(), NULL, trip->setCourse, (void *) trip);
     if (status) {
-        cout << "very bad" << endl;
+/*
+        LINFO << "didnt create thread";
+*/
     }
-    cout << "good" << endl;
+/*
+    LINFO << "create thread";
+*/
+
+}
+
+void TaxiCenter::deleteFirstDriver() {
+    this->drivers.pop_front();
 }
 
 
