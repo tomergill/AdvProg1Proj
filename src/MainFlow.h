@@ -53,6 +53,8 @@ public:
     void sendCab(AbstractCab *cab, int descriptor);
 
     void sendMessage(int num, int descriptor);
+
+    static void *handelThread(void *mainFlow);
 };
 
 #endif //TESTS_MAINFLOW_H

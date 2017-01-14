@@ -129,143 +129,154 @@ void MainFlow::flow() {
     }
 }
 
+// add static function
+void *MainFlow::handelThread(void *mainFlow1) {
+    MainFlow *mainFlow = (MainFlow *) mainFlow1;
+    int cabId = 0;
+    int port = mainFlow->socket->acceptDescriptorCommunicate();
+    char buffer[4096];
+    Driver *gp2;
+    mainFlow->socket->reciveData(buffer, sizeof(buffer), port);
+    char *end = buffer + 4095;
+    basic_array_source<char> device(buffer, end);
+    boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
+    binary_iarchive ia(s2);
+    ia >> gp2;
+    AbstractNode *node = mainFlow->taxiCenter->getNode(0, 0);
+    delete gp2->getLocation();
+    delete gp2->getBFS();
+    gp2->setLocation2(node);
+    gp2->setBFS(mainFlow->taxiCenter->getBFS());
+    mainFlow->taxiCenter->addDriver(gp2);
+    mainFlow->taxiCenter->assignCabToDriver(cabId, gp2->getId());
+    mainFlow->ports[gp2->getId()] = port;
+    mainFlow->sendCab(gp2->getTaxi(), port);
+}
+//
+
 /*
  * get the driver from the client
  */
 void MainFlow::addDriver(int num) {
     this->socket->initialize();
     while (num > 0) {
-        int cabId = 0;
-        int port = this->socket->acceptDescriptorCommunicate();
-        char buffer[4096];
-        Driver *gp2;
-        this->socket->reciveData(buffer, sizeof(buffer), port);
-        char *end = buffer + 4095;
-        basic_array_source<char> device(buffer, end);
-        boost::iostreams::stream<boost::iostreams::basic_array_source<char> > s2(device);
-        binary_iarchive ia(s2);
-        ia >> gp2;
-        AbstractNode *node = this->taxiCenter->getNode(0, 0);
-        delete gp2->getLocation();
-        delete gp2->getBFS();
-        gp2->setLocation2(node);
-        gp2->setBFS(this->taxiCenter->getBFS());
-        taxiCenter->addDriver(gp2);
-        taxiCenter->assignCabToDriver(cabId, gp2->getId());
-        this->ports[gp2->getId()] = port;
-        this->sendCab(gp2->getTaxi(), port);
+        pthread_t pthread;
+        int status = pthread_create(&pthread, NULL, handelThread, (void *) this);
+        if (status) {
+            cout << "didnt create thread" << endl;
+        }
+        cout << "create thread" << endl;
         num -= 1;
     }
 }
-
 /*
  * send the new location of the driver to the client
  */
-void MainFlow::sendDriver(Driver *driver, int descriptor) {
-    string serial_str;
-    back_insert_device<std::string> inserter(serial_str);
-    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-    binary_oarchive oa(s);
-    oa << driver;
-    s.flush();
-    this->socket->sendData(serial_str, descriptor);
-}
+    void MainFlow::sendDriver(Driver *driver, int descriptor) {
+        string serial_str;
+        back_insert_device<std::string> inserter(serial_str);
+        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+        binary_oarchive oa(s);
+        oa << driver;
+        s.flush();
+        this->socket->sendData(serial_str, descriptor);
+    }
 
 /*
  * send the cab of the driver to the client
  */
-void MainFlow::sendCab(AbstractCab *cab, int descriptor) {
-    string serial_str;
-    back_insert_device<std::string> inserter(serial_str);
-    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-    binary_oarchive oa(s);
-    oa << cab;
-    s.flush();
-    this->socket->sendData(serial_str, descriptor);
-}
+    void MainFlow::sendCab(AbstractCab *cab, int descriptor) {
+        string serial_str;
+        back_insert_device<std::string> inserter(serial_str);
+        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+        binary_oarchive oa(s);
+        oa << cab;
+        s.flush();
+        this->socket->sendData(serial_str, descriptor);
+    }
 
 /*
  * send the trip the driver have now
  */
-void MainFlow::sendTrip(Trip *trip, int descriptor) {
-    string serial_str;
-    back_insert_device<std::string> inserter(serial_str);
-    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-    binary_oarchive oa(s);
-    oa << trip;
-    s.flush();
-    this->socket->sendData(serial_str, descriptor);
-}
+    void MainFlow::sendTrip(Trip *trip, int descriptor) {
+        string serial_str;
+        back_insert_device<std::string> inserter(serial_str);
+        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+        binary_oarchive oa(s);
+        oa << trip;
+        s.flush();
+        this->socket->sendData(serial_str, descriptor);
+    }
 
 /**
  * Sends a numerical message to client.
  * @param num message
  */
-void MainFlow::sendMessage(int num, int descriptor) {
-    string serial_str;
-    back_insert_device<std::string> inserter(serial_str);
-    boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
-    binary_oarchive oa(s);
-    oa << num;
-    s.flush();
-    this->socket->sendData(serial_str, descriptor);
-}
+    void MainFlow::sendMessage(int num, int descriptor) {
+        string serial_str;
+        back_insert_device<std::string> inserter(serial_str);
+        boost::iostreams::stream<boost::iostreams::back_insert_device<std::string> > s(inserter);
+        binary_oarchive oa(s);
+        oa << num;
+        s.flush();
+        this->socket->sendData(serial_str, descriptor);
+    }
 
 /**
  * @param c char representing a MartialStatus
  * @return Martial status based on c.
  */
-MartialStatus MainFlow::getStatusByChar(char c) {
-    switch (c) {
-        case 'S':
-            return MartialStatus::S;
-        case 'M':
-            return MartialStatus::M;
-        case 'W':
-            return MartialStatus::W;
-        case 'D':
-            return MartialStatus::D;
-        default:
-            return MartialStatus::S;
+    MartialStatus MainFlow::getStatusByChar(char c) {
+        switch (c) {
+            case 'S':
+                return MartialStatus::S;
+            case 'M':
+                return MartialStatus::M;
+            case 'W':
+                return MartialStatus::W;
+            case 'D':
+                return MartialStatus::D;
+            default:
+                return MartialStatus::S;
+        }
     }
-}
 
 /**
  * @param c char representing a CarManufactorer
  * @return The CarManufactur value of c.
  */
-CarManufactur MainFlow::getManuByChar(char c) {
-    switch (c) {
-        case 'S':
-            return CarManufactur::S;
-        case 'H':
-            return CarManufactur::H;
-        case 'F':
-            return CarManufactur::F;
-        case 'T':
-            return CarManufactur::T;
-        default:
-            return CarManufactur::S;
+    CarManufactur MainFlow::getManuByChar(char c) {
+        switch (c) {
+            case 'S':
+                return CarManufactur::S;
+            case 'H':
+                return CarManufactur::H;
+            case 'F':
+                return CarManufactur::F;
+            case 'T':
+                return CarManufactur::T;
+            default:
+                return CarManufactur::S;
+        }
     }
-}
 
 /**
  * @param c char representing a CarColor
  * @return The CarColor value of c.
  */
-CarColor MainFlow::getColorByChar(char c) {
-    switch (c) {
-        case 'R':
-            return CarColor::R;
-        case 'B':
-            return CarColor::B;
-        case 'W':
-            return CarColor::W;
-        case 'G':
-            return CarColor::G;
-        default:
-            return CarColor::P;
+    CarColor MainFlow::getColorByChar(char c) {
+        switch (c) {
+            case 'R':
+                return CarColor::R;
+            case 'B':
+                return CarColor::B;
+            case 'W':
+                return CarColor::W;
+            case 'G':
+                return CarColor::G;
+            default:
+                return CarColor::P;
+        }
     }
-}
 
 
