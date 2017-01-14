@@ -23,7 +23,8 @@ private:
     Socket *socket;
     Trip *trip;
     Driver *driver;
-
+    bool finishCalculate;
+    int numberOfCase;
 
     void flow();
 

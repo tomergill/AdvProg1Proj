@@ -39,7 +39,7 @@ private:
     BFS *bfs;
     queue<AbstractNode *> course;
     int time;
-    pthread_t pthread;
+    pthread_t* pthread;
     pthread_mutex_t pthread_mutex;
     bool finishh;
 
@@ -55,7 +55,7 @@ public:
     void addPassenger(Passenger *p);
 
     void move();
-
+    void createPthread();
     int getPassengersNum();
 
     int getRideId() const;
@@ -69,7 +69,7 @@ public:
     void moveOneStep();
 
     //queue<AbstractNode *> *getCourse();
-
+    void Join();
     Driver *getDriver();
 
     void setDriver(Driver *driver);
@@ -88,7 +88,7 @@ public:
 
     Point getEndPoint();
 
-    pthread_t &getPthread();
+    pthread_t*  getPthread();
 
     pthread_mutex_t &getPthread_mutex() ;
 
@@ -104,7 +104,7 @@ public:
 
     void settingCourse(queue<AbstractNode *> course);
 
-    bool isFinish() const;
+    //bool isFinish() const;
 
     void setStart(Point *start);
 
@@ -124,7 +124,7 @@ public:
 
     void setTime(int time);
 
-    void setPthread(pthread_t pthread);
+    void setPthread(pthread_t* pthread);
 
     void setPthread_mutex(const pthread_mutex_t &pthread_mutex);
 

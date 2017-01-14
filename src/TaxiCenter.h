@@ -42,7 +42,7 @@ public:
     void addDriver(int id, int age, MartialStatus mstatus);
 
     void addDriver(Driver *d);
-
+    void waitForThread();
     void addTaxi(AbstractCab *t);
 
     AbstractNode *getFirst();

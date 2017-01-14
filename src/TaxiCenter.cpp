@@ -1,6 +1,7 @@
 //
 // Created by tomer on 12/1/16.
 //
+#include <list>
 
 #include "TaxiCenter.h"
 #include "../easyloggingpp-8.91/easylogging++.h"
@@ -28,8 +29,8 @@ TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
         t->addPassenger(p);
     }
     //Assign driver to trip
-    t->setDriver(findClosestDriverToPoint(map->getNode(start->getX(),
-                                                       start->getY())));
+    /*t->setDriver(findClosestDriverToPoint(map->getNode(start->getX(),
+                                                       start->getY())));*/
     //add a TripTimer for this trip.
     timers.push_front(new TripTimer(t));
 }
@@ -328,20 +329,21 @@ BFS *TaxiCenter::getBFS() {
 }
 
 void TaxiCenter::createTread(Trip *trip) {
-    int status = pthread_create(&trip->getPthread(), NULL, trip->setCourse, (void *) trip);
-    if (status) {
-/*
-        LINFO << "didnt create thread";
-*/
-    }
-/*
-    LINFO << "create thread";
-*/
-
+    trip->createPthread();
 }
 
 void TaxiCenter::deleteFirstDriver() {
     this->drivers.pop_front();
+}
+
+void TaxiCenter::waitForThread() {
+    /* kvעביר לוקטור
+    /* לעשות .at
+  /*  list<Trip *>::const_iterator it;
+    for (it = this->trips.begin(); it != this->trips.end(); ++it) {
+            (*it)->Join();
+    }*/
+     this->trips.front()->Join();
 }
 
 

@@ -154,9 +154,7 @@ void *Trip::setCourse(void *trip2) {
     trip->getMap()->newRoad();
     trip->setFinish(true);
     pthread_mutex_unlock(&trip->getPthread_mutex());
-/*
-    LINFO << "end";
-*/
+    return NULL;
 }
 
 /*
@@ -216,7 +214,7 @@ Point Trip::getEndPoint() {
     return *(this->end);
 }
 
-pthread_t &Trip::getPthread() {
+pthread_t *Trip::getPthread() {
     return pthread;
 }
 
@@ -248,9 +246,9 @@ void Trip::settingCourse(queue<AbstractNode *> course) {
     this->course = course;
 }
 
-bool Trip::isFinish() const {
+/*bool Trip::isFinish() const {
     return finishh;
-}
+}*/
 
 void Trip::setStart(Point *start) {
     Trip::start = start;
@@ -288,7 +286,7 @@ void Trip::setTime(int time) {
     Trip::time = time;
 }
 
-void Trip::setPthread(pthread_t pthread) {
+void Trip::setPthread(pthread_t *pthread) {
     Trip::pthread = pthread;
 }
 
@@ -302,4 +300,13 @@ void Trip::setFinish(bool finish) {
 
 bool Trip::isFinishh() {
     return finishh;
+}
+
+void Trip::createPthread() {
+    this->pthread = new pthread_t();
+    pthread_create(this->pthread, NULL, this->setCourse, (void *) this);
+}
+
+void Trip::Join() {
+    pthread_join(*this->pthread, NULL);
 }

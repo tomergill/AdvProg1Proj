@@ -28,14 +28,6 @@ class Driver {
         ar & mstatus;
         ar & bfs;
         ar & location;
-
-        /*   ar & totalExperience;
-           ar & totalPassengers;
-           ar & totalSatisfaction;
-           ar & km;
-           ar & cab;
-           ar & bfs;
-           ar & location;*/
     }
 
 private:
