@@ -5,6 +5,8 @@
 #include "Trip.h"
 #include "../easyloggingpp-8.91/easylogging++.h"
 
+pthread_mutex_t LockGood = PTHREAD_MUTEX_INITIALIZER;
+
 
 /*
  * c tor of trip
@@ -23,26 +25,6 @@ Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
     this->bfs = new BFS();
     this->time = startTime;
     this->finishh = false;
-}
-
-/*
- * c tor of trip
- */
-Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
-           int startTime, pthread_mutex_t lock) {
-    this->rideId = id;
-    this->start = start;
-    this->end = end;
-    this->tarif = tarif;
-    this->driver = NULL;
-    this->passengersNum = 0;
-    this->passengersVec = {};
-    this->totalMPassed = 0;
-    this->map = map;
-    this->bfs = new BFS();
-    this->time = startTime;
-    this->finishh = false;
-    this->pthread_mutex = lock;
 }
 
 /*
@@ -142,7 +124,8 @@ Driver *Trip::getDriver() {
  */
 void *Trip::setCourse(void *trip2) {
     Trip *trip = (Trip *) trip2;
-    pthread_mutex_lock(&trip->getPthread_mutex());
+    pthread_mutex_lock(&LockGood);
+    cout << "start do pthread" << endl;
 /*
     LINFO << "start";
 */
@@ -151,9 +134,10 @@ void *Trip::setCourse(void *trip2) {
                                                                 trip->getMap()->getNode(trip->end->getX(),
                                                                                         trip->end->getY()));
     trip->settingCourse(course);
+    cout << "finish do pthread" << endl;
     trip->getMap()->newRoad();
+    pthread_mutex_unlock(&LockGood);
     trip->setFinish(true);
-    pthread_mutex_unlock(&trip->getPthread_mutex());
     return NULL;
 }
 
@@ -216,10 +200,6 @@ Point Trip::getEndPoint() {
 
 pthread_t *Trip::getPthread() {
     return pthread;
-}
-
-pthread_mutex_t &Trip::getPthread_mutex() {
-    return pthread_mutex;
 }
 
 BFS *Trip::getBfs() {
@@ -290,9 +270,7 @@ void Trip::setPthread(pthread_t *pthread) {
     Trip::pthread = pthread;
 }
 
-void Trip::setPthread_mutex(const pthread_mutex_t &pthread_mutex) {
-    Trip::pthread_mutex = pthread_mutex;
-}
+
 
 void Trip::setFinish(bool finish) {
     Trip::finishh = finish;

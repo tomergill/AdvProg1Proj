@@ -40,14 +40,11 @@ private:
     queue<AbstractNode *> course;
     int time;
     pthread_t* pthread;
-    pthread_mutex_t pthread_mutex;
     bool finishh;
 
 public:
     Trip(int id, Point *start, Point *end, double tarif, Map *map,
          int startTime);
-    Trip(int id, Point *start, Point *end, double tarif, Map *map,
-         int startTime,pthread_mutex_t lock);
     Trip();
 
     ~Trip();
@@ -90,7 +87,6 @@ public:
 
     pthread_t*  getPthread();
 
-    pthread_mutex_t &getPthread_mutex() ;
 
     BFS *getBfs();
 

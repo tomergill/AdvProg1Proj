@@ -8,6 +8,10 @@ using namespace boost::iostreams;
 using namespace boost::archive;
 using namespace boost::iostreams;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_t pthread1;
+pthread_t pthread2;
+int numberOfDrivers = 0;
+int numberOf9Server = 0;
 
 /*
  * c-tor of main flow
@@ -33,7 +37,7 @@ MainFlow::MainFlow(MapFactory *factory, int port) {
     time = 0;
     this->socket = new Tcp(1, port);
     this->trip = NULL;
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 999999; i++) {
         this->ports[i] = -1;
     }
     this->numberOfCase = -1;
@@ -85,7 +89,7 @@ void MainFlow::flow() {
                     >> tariff >> dummy >> time1;
                 taxiCenter->answerCall(rideId, new Point(start_x, start_y),
                                        new Point(end_x, end_y), tariff,
-                                       pass_num, time1, lock);
+                                       pass_num, time1);
                 break;
             case 3: //New Cab
                 this->numberOfCase = 3;
@@ -105,14 +109,16 @@ void MainFlow::flow() {
                 taxiCenter->printDriverLocation(driverId);
                 break;
             case 9: //move trips
+                while (true) {
+                    if (numberOfDrivers >= numOfDrivers) {
+                        break;
+                    }
+                }
+                /* for (int i = 0; i < 2; i++) {
+                     pthread_join(this->threads[i], NULL);
+                     cout << "joining:" <<i<<endl;
+                 }*/
                 if (!this->finishCalculate) {
-                    /*list<Trip *>::iterator it = this->taxiCenter->getTrips().begin();
-                    for (it; it != this->taxiCenter->getTrips().end(); it++) {
-                        cout << (*it)->getRideId() << endl;
-                        if (!(*it)->isFinishh()) {
-                            pthread_join(*(*it)->getPthread(), NULL);
-                        }
-                    }*/
                     this->taxiCenter->waitForThread();
                     this->finishCalculate = true;
                 }
@@ -152,7 +158,8 @@ void MainFlow::flow() {
             }
         }
     }
-    pthread_exit(NULL);
+    cout << "before finish" << endl;
+    return;
 }
 
 // add static function
@@ -161,7 +168,7 @@ void *MainFlow::handelThread(void *mainFlow1) {
     int cabId = 0;
     cout << "before accept" << endl;
     int port = mainFlow->socket->acceptDescriptorCommunicate();
-    cout << "aaa" << endl;
+    cout << "Succuss with the connection with the client" << endl;
     char buffer[4096];
     Driver *driver1;
     mainFlow->socket->reciveData(buffer, sizeof(buffer), port);
@@ -175,24 +182,23 @@ void *MainFlow::handelThread(void *mainFlow1) {
     delete driver1->getBFS();
     driver1->setLocation2(node);
     cout << "after accept" << endl;
-    driver1->setBFS(mainFlow->taxiCenter->getBFS());
     pthread_mutex_lock(&lock);
+    driver1->setBFS(mainFlow->taxiCenter->getBFS());
     mainFlow->taxiCenter->addDriver(driver1);
     mainFlow->taxiCenter->assignCabToDriver(cabId, driver1->getId());
     mainFlow->ports[driver1->getId()] = port;
     mainFlow->sendCab(driver1->getTaxi(), port);
-    pthread_mutex_unlock(&lock);
     AbstractNode *currentPoint = driver1->getLocation();
-    cout << "after accept" << endl;
+    pthread_mutex_unlock(&lock);
     while (true) { //the conection between the server and the client
         if (mainFlow->numberOfCase == 7) { // close conection
             break;
         }
-        if (mainFlow->numberOfCase == 9) {
-            if (!currentPoint->operator==(*driver1->getLocation())) {
-                mainFlow->sendDriver(driver1, port);
-                currentPoint = driver1->getLocation();
-            }
+        if (!currentPoint->operator==(*driver1->getLocation())) {
+            mainFlow->sendDriver(driver1, port);
+            cout << *driver1->getLocation() << endl;
+            currentPoint = driver1->getLocation();
+
         }
     }
 }
@@ -202,13 +208,13 @@ void *MainFlow::handelThread(void *mainFlow1) {
  * get the driver from the client
  */
 void MainFlow::addDriver(int num) {
+    int i = 0;
     while (num > 0) {
         pthread_t pthread;
-        int status = pthread_create(&pthread, NULL, handelThread, (void *) this);
-        if (status) {
-            cout << "didnt create thread" << endl;
-        }
-        cout << "create thread" << endl;
+        pthread_create(&pthread, NULL, handelThread, (void *) this);
+        this->threads[i] = pthread;
+        i++;
+        // pthread_join(pthread, NULL);
         num -= 1;
     }
 }
@@ -237,6 +243,7 @@ void MainFlow::sendCab(AbstractCab *cab, int descriptor) {
     oa << cab;
     s.flush();
     this->socket->sendData(serial_str, descriptor);
+    numberOfDrivers++;
 }
 
 /*

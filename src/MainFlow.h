@@ -28,7 +28,8 @@ private:
 
     void flow();
 
-    int ports[100];
+    int ports[999999];
+    pthread_t threads[10];
 
     MartialStatus getStatusByChar(char c);
 

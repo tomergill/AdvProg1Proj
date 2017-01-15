@@ -135,7 +135,8 @@ int Socket::acceptDescriptorCommunicate() {
                               (struct sockaddr *) &client_sin, &addr_len);
     if (acceptDescriptor < 0) {
         //return an error represent error at this method
-        return ERROR_ACCEPT;
+       // perror("ERROR_CONNECT - in acceptOneClient()\n");
+        //exit(1);
     }
     return acceptDescriptor;
 }

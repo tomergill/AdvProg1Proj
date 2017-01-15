@@ -7,17 +7,16 @@
 #include "../easyloggingpp-8.91/easylogging++.h"
 #include <pthread.h>
 
-pthread_mutex_t Lock = PTHREAD_MUTEX_INITIALIZER;
 
 /*
  * add passenger and create a trip for him
  */
 void
 TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
-                       int startTime, pthread_mutex_t lock) {
+                       int startTime) {
     int i;
 
-    Trip *t = new Trip(id, start, end, tarif, map, startTime, lock);
+    Trip *t = new Trip(id, start, end, tarif, map, startTime);
     this->createTread(t);
     trips.push_back(t);
     for (i = 0; i < pass; i++) {
@@ -337,13 +336,20 @@ void TaxiCenter::deleteFirstDriver() {
 }
 
 void TaxiCenter::waitForThread() {
-    /* kvעביר לוקטור
-    /* לעשות .at
-  /*  list<Trip *>::const_iterator it;
-    for (it = this->trips.begin(); it != this->trips.end(); ++it) {
-            (*it)->Join();
-    }*/
-     this->trips.front()->Join();
+    Trip *arr[this->trips.size()];
+    int i = 0;
+    int size = this->trips.size();
+    while (i < size) {
+        arr[i] = this->trips.front();
+        this->trips.pop_front();
+        i++;
+    }
+    i = 0;
+    while (i < size) {
+        arr[i]->Join();
+        this->trips.push_back(arr[i]);
+        i++;
+    }
 }
 
 
