@@ -15,6 +15,8 @@ Driver::Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *s
     this->km = 0;
     this->cab = NULL;
     this->totalExperience = 0;
+    this->descriptor = -1;
+    this->clientGotCuuerntPoint = false;
 }
 
 Driver::~Driver() {
@@ -90,5 +92,21 @@ void Driver::setLocation2(AbstractNode *node) {
 
 void Driver::setBFS(BFS *bfs) {
     this->bfs = bfs;
+}
+
+void Driver::setDescriptor(int descriptor1) {
+    this->descriptor = descriptor1;
+}
+
+int Driver::getDescriptor() {
+    return this->descriptor;
+}
+
+void Driver::setClientGotPoint(bool flag) {
+    this->clientGotCuuerntPoint = flag;
+}
+
+bool Driver::getClientGotPoint() {
+    return this->clientGotCuuerntPoint;
 }
 

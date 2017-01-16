@@ -31,6 +31,7 @@ private:
     BFS *bfs;
     list<TimeListener *> timers;
     thread_t thread;
+
     void deletetriplistener(int tripId);
 
 public:
@@ -42,7 +43,9 @@ public:
     void addDriver(int id, int age, MartialStatus mstatus);
 
     void addDriver(Driver *d);
+
     void waitForThread();
+
     void addTaxi(AbstractCab *t);
 
     AbstractNode *getFirst();
@@ -50,6 +53,8 @@ public:
     void timePassed(int time);
 
     TaxiCenter(Map *m);
+
+    void pushDriver(Driver *driver);
 
     void printDriverLocation(Driver *driver);
 

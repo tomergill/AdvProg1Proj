@@ -7,7 +7,6 @@
 
 pthread_mutex_t LockGood = PTHREAD_MUTEX_INITIALIZER;
 
-
 /*
  * c tor of trip
  */
@@ -39,6 +38,7 @@ Trip::~Trip() {
         delete p;
     }
     delete bfs;
+    delete this->pthread;
 /*
 while(!course.empty()){
 AbstractNode* p2=course.front();
@@ -269,7 +269,6 @@ void Trip::setTime(int time) {
 void Trip::setPthread(pthread_t *pthread) {
     Trip::pthread = pthread;
 }
-
 
 
 void Trip::setFinish(bool finish) {

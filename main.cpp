@@ -27,5 +27,6 @@ int main(int argc, char *argv[]) {
         matrixInput += "|" + obstacle;
     }
     mainFlow.startFlow(matrixInput);
+    cout << "finish flow" << endl;
     return 0;
 }

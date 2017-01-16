@@ -28,9 +28,6 @@ private:
 
     void flow();
 
-    int ports[999999];
-    pthread_t threads[10];
-
     MartialStatus getStatusByChar(char c);
 
     CarManufactur getManuByChar(char c);
@@ -57,6 +54,10 @@ public:
     void sendMessage(int num, int descriptor);
 
     static void *handelThread(void *mainFlow);
+
+/*    void checkAllClientsGotPoint();
+
+    void setAllClientsDidntGotPoint();*/
 };
 
 #endif //TESTS_MAINFLOW_H

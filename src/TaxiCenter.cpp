@@ -109,7 +109,11 @@ TaxiCenter::TaxiCenter(Map *m) {
  * print locations of drivers
  */
 void TaxiCenter::printDriverLocation(Driver *driver) {
-    cout << *(driver->getLocation()) << "\n";
+    if (driver != NULL) {
+        cout << *(driver->getLocation()) << "\n";
+    } else {
+        cout << "(-1,-1)" << endl;
+    }
 }
 
 /*
@@ -228,6 +232,7 @@ Driver *TaxiCenter::getDriver(int id) {
             return *it;
         }
     }
+    return NULL;
 }
 
 /*
@@ -350,6 +355,10 @@ void TaxiCenter::waitForThread() {
         this->trips.push_back(arr[i]);
         i++;
     }
+}
+
+void TaxiCenter::pushDriver(Driver *driver) {
+    this->drivers.push_back(driver);
 }
 
 

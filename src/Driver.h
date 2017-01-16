@@ -41,6 +41,8 @@ private:
     AbstractCab *cab;
     BFS *bfs;
     AbstractNode *location;
+    int descriptor;
+    bool clientGotCuuerntPoint;
 public:
     Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *node);
 
@@ -68,9 +70,9 @@ public:
 
     BFS *getBFS();
 
-    void setLocation2(AbstractNode* node);
+    void setLocation2(AbstractNode *node);
 
-    void setBFS(BFS* bfs);
+    void setBFS(BFS *bfs);
 
     //queue<AbstractNode *> *getCourse();
 
@@ -81,6 +83,14 @@ public:
     void setLocation();
 
     void setCab(AbstractCab *cab);
+
+    void setDescriptor(int descriptor);
+
+    int getDescriptor();
+
+    void setClientGotPoint(bool flag);
+
+    bool getClientGotPoint();
 };
 
 

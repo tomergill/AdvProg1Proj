@@ -8,10 +8,12 @@ using namespace boost::iostreams;
 using namespace boost::archive;
 using namespace boost::iostreams;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t lock3 = PTHREAD_MUTEX_INITIALIZER;
 pthread_t pthread1;
 pthread_t pthread2;
 int numberOfDrivers = 0;
-int numberOf9Server = 0;
+int numberOfClients = 0;
 
 /*
  * c-tor of main flow
@@ -37,9 +39,6 @@ MainFlow::MainFlow(MapFactory *factory, int port) {
     time = 0;
     this->socket = new Tcp(1, port);
     this->trip = NULL;
-    for (int i = 0; i < 999999; i++) {
-        this->ports[i] = -1;
-    }
     this->numberOfCase = -1;
     this->socket->initialize();
     this->finishCalculate = false;
@@ -79,6 +78,7 @@ void MainFlow::flow() {
             case 1: //New Driver
                 this->numberOfCase = 1;
                 cin >> numOfDrivers;
+                cout << numOfDrivers << endl;
                 this->addDriver(numOfDrivers);
                 break;
 
@@ -114,10 +114,7 @@ void MainFlow::flow() {
                         break;
                     }
                 }
-                /* for (int i = 0; i < 2; i++) {
-                     pthread_join(this->threads[i], NULL);
-                     cout << "joining:" <<i<<endl;
-                 }*/
+                cout << "got all drivers" << endl;
                 if (!this->finishCalculate) {
                     this->taxiCenter->waitForThread();
                     this->finishCalculate = true;
@@ -128,12 +125,15 @@ void MainFlow::flow() {
                     taxiCenter->assignADriverToTrip(trip);
                     this->driver = this->trip->getDriver();
                 }
-                /*  int numberOfThreads = this->taxiCenter->getTrips().size();
-                  while (numberOfThreads > 0) {
 
-                  }*/
                 taxiCenter->timePassed(time);
                 this->numberOfCase = 9;
+                while (true) {
+                    if (numberOfClients >= numOfDrivers) {
+                        numberOfClients = 0;
+                        break;
+                    }
+                }
                 break;
 
             default:
@@ -144,19 +144,14 @@ void MainFlow::flow() {
     ///
     this->numberOfCase = 7;
     Driver *driver = this->taxiCenter->getDrivers().front();
-    while (this->taxiCenter->getDrivers().size() > 0) {
-        for (int i = 0; i < 100; i++) {
-            if (driver->getId() == i) {
-                if (this->ports[i] != -1) {
-                    driver->setLocation();
-                    this->sendDriver(driver, this->ports[driver->getId()]);
-                    this->taxiCenter->deleteFirstDriver();
-                    delete driver;
-                    driver = this->taxiCenter->getDrivers().front();
-                }
-                break;
-            }
-        }
+    int size = this->taxiCenter->getDrivers().size();
+    while (size > 0) {
+        driver->setLocation();
+        this->sendDriver(driver, driver->getDescriptor());
+        this->taxiCenter->deleteFirstDriver();
+        if (this->taxiCenter->getDrivers().size() > 0)
+            driver = this->taxiCenter->getDrivers().front();
+        size--;
     }
     cout << "before finish" << endl;
     pthread_exit(NULL);
@@ -187,7 +182,7 @@ void *MainFlow::handelThread(void *mainFlow1) {
     driver1->setBFS(mainFlow->taxiCenter->getBFS());
     mainFlow->taxiCenter->addDriver(driver1);
     mainFlow->taxiCenter->assignCabToDriver(cabId, driver1->getId());
-    mainFlow->ports[driver1->getId()] = port;
+    driver1->setDescriptor(port);
     mainFlow->sendCab(driver1->getTaxi(), port);
     AbstractNode *currentPoint = driver1->getLocation();
     pthread_mutex_unlock(&lock);
@@ -197,10 +192,14 @@ void *MainFlow::handelThread(void *mainFlow1) {
         }
         if (!currentPoint->operator==(*driver1->getLocation())) {
             mainFlow->sendDriver(driver1, port);
-            cout << *driver1->getLocation() << endl;
             currentPoint = driver1->getLocation();
 
         }
+        if (driver1->getClientGotPoint()) {
+            numberOfClients++;
+            driver1->setClientGotPoint(false);
+        }
+
     }
 }
 //
@@ -209,13 +208,12 @@ void *MainFlow::handelThread(void *mainFlow1) {
  * get the driver from the client
  */
 void MainFlow::addDriver(int num) {
-    int i = 0;
+    cout << "in addDriver" << endl;
     while (num > 0) {
         pthread_t pthread;
         pthread_create(&pthread, NULL, handelThread, (void *) this);
-        this->threads[i] = pthread;
-        i++;
-        // pthread_join(pthread, NULL);
+        //pthread_join(pthread, NULL);
+        //cout << "wait for clients first!!!!!" << endl;
         num -= 1;
     }
 }
@@ -231,6 +229,9 @@ void MainFlow::sendDriver(Driver *driver, int descriptor) {
     oa << driver;
     s.flush();
     this->socket->sendData(serial_str, descriptor);
+    /*pthread_mutex_lock(&lock3);
+    numberOfClients++;
+    pthread_mutex_unlock(&lock3);*/
 }
 
 /*
@@ -244,7 +245,9 @@ void MainFlow::sendCab(AbstractCab *cab, int descriptor) {
     oa << cab;
     s.flush();
     this->socket->sendData(serial_str, descriptor);
+    //  pthread_mutex_lock(&lock2);
     numberOfDrivers++;
+    // pthread_mutex_unlock(&lock2);
 }
 
 /*
@@ -330,5 +333,6 @@ CarColor MainFlow::getColorByChar(char c) {
             return CarColor::P;
     }
 }
+
 
 
