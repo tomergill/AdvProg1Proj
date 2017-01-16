@@ -159,6 +159,7 @@ void MainFlow::flow() {
         }
     }
     cout << "before finish" << endl;
+    pthread_exit(NULL);
     return;
 }
 
