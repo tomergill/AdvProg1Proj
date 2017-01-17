@@ -4,7 +4,6 @@
 #include <list>
 
 #include "TaxiCenter.h"
-#include "../easyloggingpp-8.91/easylogging++.h"
 #include <pthread.h>
 
 
@@ -66,7 +65,7 @@ void TaxiCenter::timePassed(int time) {
      * possible.
      */
     for (it; it != trips.end(); it++) {
-        if ((*it)->getDriver() == NULL && (*it)->getStartTime() >= time) {
+        if ((*it)->getDriver() == NULL && time >= (*it)->getStartTime()) {
             assignADriverToTrip(*it);
         }
     }
@@ -142,6 +141,7 @@ Driver *TaxiCenter::findClosestDriverToPoint(AbstractNode *p) {
     list<Trip *>::iterator it_t = trips.begin();
 
     for (it_d; it_d != drivers.end(); it_d++) { //going over drivers
+        cout << (*it_d)->getId() << endl;
         if ((*it_d)->getLocation()->operator==(*p)) { //if found driver in p
             breaked = false;
 
@@ -313,6 +313,9 @@ void TaxiCenter::assignADriverToTrip(int tripId) {
  */
 void TaxiCenter::assignADriverToTrip(Trip *t) {
     Driver *d = findClosestDriverToPoint(t->getStart());
+    cout << t->getRideId() << "ID OF TRIP " << endl;
+    cout << d->getId() << "ID OF DRIVER" << endl;
+    cout << ";;;;" << endl;
     t->setDriver(d);
 }
 

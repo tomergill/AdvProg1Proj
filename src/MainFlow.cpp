@@ -13,6 +13,8 @@ pthread_t pthread1;
 pthread_t pthread2;
 int numberOfDrivers = 0;
 int numberOfClients = 0;
+bool was9 = false;
+int closeConections = 0;
 
 /*
  * c-tor of main flow
@@ -108,6 +110,7 @@ void MainFlow::flow() {
                 taxiCenter->printDriverLocation(driverId);
                 break;
             case 9: //move trips
+                was9 = true;
                 while (true) {
                     if (numberOfDrivers >= numOfDrivers) {
                         break;
@@ -119,23 +122,8 @@ void MainFlow::flow() {
                     this->finishCalculate = true;
                 }
                 time++;
-                if (this->trip == NULL) {
-                    this->trip = this->taxiCenter->getTrips().front();
-                    taxiCenter->assignADriverToTrip(trip);
-                    this->driver = this->trip->getDriver();
-                }
-
                 taxiCenter->timePassed(time);
                 this->numberOfCase = 9;
-                cout << "brfore while" << endl;
-                //    if (!this->allDriversInEndPoint()) {
-                while (true) {
-                    if (numberOfClients >= numOfDrivers) {
-                        numberOfClients = 0;
-                        break;
-                    }
-                }
-                //  }
                 break;
 
             default:
@@ -145,6 +133,11 @@ void MainFlow::flow() {
     }
     ///
     this->numberOfCase = 7;
+    while (true) {
+        if (numberOfDrivers <= closeConections) {
+            break;
+        }
+    }
     Driver *driver = this->taxiCenter->getDrivers().front();
     int size = this->taxiCenter->getDrivers().size();
     while (size > 0) {
@@ -156,7 +149,7 @@ void MainFlow::flow() {
         size--;
     }
     cout << "before finish" << endl;
-    pthread_exit(NULL);
+    // pthread_exit(NULL);
     return;
 }
 
@@ -190,6 +183,12 @@ void *MainFlow::handelThread(void *mainFlow1) {
     pthread_mutex_unlock(&lock);
     while (true) { //the conection between the server and the client
         if (mainFlow->numberOfCase == 7) { // close conection
+            if (was9) {
+                mainFlow->sendDriver(driver1, port);
+            }
+            pthread_mutex_lock(&lock3);
+            closeConections++;
+            pthread_mutex_unlock(&lock3);
             break;
         }
         if (!currentPoint->operator==(*driver1->getLocation())) {
@@ -209,7 +208,7 @@ void *MainFlow::handelThread(void *mainFlow1) {
 
     }
 }
-//
+
 
 /*
  * get the driver from the client
