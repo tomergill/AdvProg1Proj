@@ -3,7 +3,6 @@
 //
 #include <pthread.h>
 #include "Trip.h"
-#include "../easyloggingpp-8.91/easylogging++.h"
 
 pthread_mutex_t LockGood = PTHREAD_MUTEX_INITIALIZER;
 
