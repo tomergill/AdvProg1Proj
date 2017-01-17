@@ -17,6 +17,7 @@ Driver::Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *s
     this->totalExperience = 0;
     this->descriptor = -1;
     this->clientGotCuuerntPoint = false;
+    this->last = NULL;
 }
 
 Driver::~Driver() {
@@ -109,4 +110,13 @@ void Driver::setClientGotPoint(bool flag) {
 bool Driver::getClientGotPoint() {
     return this->clientGotCuuerntPoint;
 }
+
+void Driver::setLastPoint(AbstractNode *node) {
+    this->last = node;
+}
+
+AbstractNode *Driver::getLastPoint() {
+    return this->last;
+}
+
 

@@ -41,6 +41,7 @@ private:
     AbstractCab *cab;
     BFS *bfs;
     AbstractNode *location;
+    AbstractNode *last;
     int descriptor;
     bool clientGotCuuerntPoint;
 public:
@@ -91,6 +92,10 @@ public:
     void setClientGotPoint(bool flag);
 
     bool getClientGotPoint();
+
+    void setLastPoint(AbstractNode *node);
+
+    AbstractNode *getLastPoint();
 };
 
 

@@ -55,9 +55,8 @@ public:
 
     static void *handelThread(void *mainFlow);
 
-/*    void checkAllClientsGotPoint();
+    bool allDriversInEndPoint();
 
-    void setAllClientsDidntGotPoint();*/
 };
 
 #endif //TESTS_MAINFLOW_H

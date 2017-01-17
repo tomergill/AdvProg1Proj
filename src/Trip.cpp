@@ -39,12 +39,6 @@ Trip::~Trip() {
     }
     delete bfs;
     delete this->pthread;
-/*
-while(!course.empty()){
-AbstractNode* p2=course.front();
-course.pop();
-delete p2;
-}*/
 }
 
 /*
@@ -106,13 +100,6 @@ double Trip::getTarif() {
 }
 
 /*
- * get the course of trip
- */
-/*queue<AbstractNode *> *Trip::getCourse() {
-    return this->course;
-}*/
-
-/*
  * get the driver of the trip
  */
 Driver *Trip::getDriver() {
@@ -146,6 +133,7 @@ void *Trip::setCourse(void *trip2) {
  */
 void Trip::setDriver(Driver *driver) {
     this->driver = driver;
+    this->driver->setLastPoint(this->getEnd());
 /*    if (driver != NULL)
         this->driver->setCourse(&this->course);*/
 }

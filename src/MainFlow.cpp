@@ -1,8 +1,7 @@
 #include "MainFlow.h"
 #include "Udp.h"
 #include "Tcp.h"
-/*#include "easyloggingpp-8.91/easylogging++.h"
-_INITIALIZE_EASYLOGGINGPP*/
+
 using namespace std;
 using namespace boost::iostreams;
 using namespace boost::archive;
@@ -128,12 +127,15 @@ void MainFlow::flow() {
 
                 taxiCenter->timePassed(time);
                 this->numberOfCase = 9;
+                cout << "brfore while" << endl;
+                //    if (!this->allDriversInEndPoint()) {
                 while (true) {
                     if (numberOfClients >= numOfDrivers) {
                         numberOfClients = 0;
                         break;
                     }
                 }
+                //  }
                 break;
 
             default:
@@ -194,6 +196,11 @@ void *MainFlow::handelThread(void *mainFlow1) {
             mainFlow->sendDriver(driver1, port);
             currentPoint = driver1->getLocation();
 
+        }
+        if (driver1->getLastPoint() != NULL && driver1->getLocation() != NULL) {
+            if (driver1->getLocation()->operator==(*driver1->getLastPoint())) {
+                driver1->setClientGotPoint(true);
+            }
         }
         if (driver1->getClientGotPoint()) {
             numberOfClients++;
@@ -332,6 +339,29 @@ CarColor MainFlow::getColorByChar(char c) {
         default:
             return CarColor::P;
     }
+}
+
+bool MainFlow::allDriversInEndPoint() {
+    bool allFinish = true;
+    Driver *arr[this->taxiCenter->getDrivers().size()];
+    int i = 0;
+    int size = this->taxiCenter->getDrivers().size();
+    while (i < size) {
+        arr[i] = this->taxiCenter->getDrivers().front();
+        this->taxiCenter->getDrivers().pop_front();
+        i++;
+    }
+    i = 0;
+    while (i < size) {
+        if (!arr[i]->getLocation()->operator==(*arr[i]->getLastPoint())) {
+            allFinish = false;
+        } else {
+            arr[i]->setClientGotPoint(true);
+        }
+        this->taxiCenter->getDrivers().push_back(arr[i]);
+        i++;
+    }
+    return allFinish;
 }
 
 
