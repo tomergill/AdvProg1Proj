@@ -132,7 +132,8 @@ void *Trip::setCourse(void *trip2) {
  */
 void Trip::setDriver(Driver *driver) {
     this->driver = driver;
-    this->driver->setLastPoint(this->getEnd());
+    if (this->driver != NULL)
+        this->driver->setLastPoint(this->getEnd());
 /*    if (driver != NULL)
         this->driver->setCourse(&this->course);*/
 }

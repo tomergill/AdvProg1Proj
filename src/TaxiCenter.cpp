@@ -66,6 +66,7 @@ void TaxiCenter::timePassed(int time) {
      */
     for (it; it != trips.end(); it++) {
         if ((*it)->getDriver() == NULL && time >= (*it)->getStartTime()) {
+            cout << (*it)->getRideId() << " time: " << time << endl;
             assignADriverToTrip(*it);
         }
     }
@@ -80,6 +81,7 @@ void TaxiCenter::timePassed(int time) {
     while (it != trips.end()) {
         if ((*it)->getDriver() != NULL && (*it)->getEnd()->operator==(*((*it)
                 ->getDriver()->getLocation()))) {
+            cout << "delete Trip:  " << (*it)->getRideId() << endl;
             (*it)->finish();
             temp = *it;
             it = trips.erase(it);
@@ -313,9 +315,11 @@ void TaxiCenter::assignADriverToTrip(int tripId) {
  */
 void TaxiCenter::assignADriverToTrip(Trip *t) {
     Driver *d = findClosestDriverToPoint(t->getStart());
-    cout << t->getRideId() << "ID OF TRIP " << endl;
-    cout << d->getId() << "ID OF DRIVER" << endl;
-    cout << ";;;;" << endl;
+    if (d != NULL) {
+        cout << t->getRideId() << "    ID OF TRIP " << endl;
+        cout << d->getId() << "   ID OF DRIVER" << endl;
+    }
+    // cout << ";;;;" << endl;
     t->setDriver(d);
 }
 

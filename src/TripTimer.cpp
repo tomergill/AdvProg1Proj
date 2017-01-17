@@ -21,10 +21,11 @@ TripTimer::~TripTimer() {}
  * Called when time has passed, and moves the trip one step.
  */
 void TripTimer::tock(int time) {
-    if(this->trip->getDriver()!=NULL) {
+    if (this->trip->getDriver() != NULL) {
         this->trip->getDriver()->setClientGotPoint(true);
     }
     if (time > trip->getStartTime()) {
+        cout << "move trip " << trip->getRideId() << endl;
         trip->moveOneStep();
     }
 }
