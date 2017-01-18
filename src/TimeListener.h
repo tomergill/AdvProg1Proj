@@ -20,6 +20,11 @@ public:
      * Destructor.
      */
     virtual ~TimeListener();
+
+    /**
+     * @return teh start time
+     */
+    virtual int getStartTime() = 0;
 };
 
 

@@ -156,12 +156,12 @@ void MainFlow::flow() {
 // add static function
 void *MainFlow::handelThread(void *mainFlow1) {
     MainFlow *mainFlow = (MainFlow *) mainFlow1;
-    int cabId = 0;
+//    int cabId = 0;
     cout << "before accept" << endl;
     int port = mainFlow->socket->acceptDescriptorCommunicate();
     cout << "Succuss with the connection with the client" << endl;
     char buffer[4096];
-    Driver *driver1;
+    Driver *driver1 = NULL;
     mainFlow->socket->reciveData(buffer, sizeof(buffer), port);
     char *end = buffer + 4095;
     basic_array_source<char> device(buffer, end);
@@ -176,10 +176,12 @@ void *MainFlow::handelThread(void *mainFlow1) {
     pthread_mutex_lock(&lock);
     driver1->setBFS(mainFlow->taxiCenter->getBFS());
     mainFlow->taxiCenter->addDriver(driver1);
-    mainFlow->taxiCenter->assignCabToDriver(cabId, driver1->getId());
+    mainFlow->taxiCenter->assignCabToDriver(driver1->getCabId(), driver1->getId());
     driver1->setDescriptor(port);
     mainFlow->sendCab(driver1->getTaxi(), port);
     AbstractNode *currentPoint = driver1->getLocation();
+    driver1->setLastPoint(NULL);
+    driver1->setClientGotPoint(false);
     pthread_mutex_unlock(&lock);
     while (true) { //the conection between the server and the client
         if (mainFlow->numberOfCase == 7) { // close conection
@@ -189,6 +191,7 @@ void *MainFlow::handelThread(void *mainFlow1) {
             pthread_mutex_lock(&lock3);
             closeConections++;
             pthread_mutex_unlock(&lock3);
+            delete driver1;
             break;
         }
         if (!currentPoint->operator==(*driver1->getLocation())) {

@@ -91,7 +91,7 @@ void client::sendDriver() {
     status = getStatusByChar(mstatus);
     BFS *bfs = new BFS();
     AbstractNode *node = new Node(Point(0, 0));
-    Driver *driver = new Driver(driverId, age, status, bfs, node);
+    Driver *driver = new Driver(driverId, age, status, bfs, node, cabId);
     this->driver = driver;
     string serial_str;
     back_insert_device<std::string> inserter(serial_str);

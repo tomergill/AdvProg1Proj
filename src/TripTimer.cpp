@@ -36,3 +36,7 @@ void TripTimer::tock(int time) {
 Trip *TripTimer::getTrip() {
     return trip;
 }
+
+int TripTimer::getStartTime() {
+    return trip->getStartTime();
+}

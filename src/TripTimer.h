@@ -22,6 +22,8 @@ public:
     ~TripTimer();
 
     Trip *getTrip();
+
+    int getStartTime();
 };
 
 

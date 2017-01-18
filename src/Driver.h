@@ -28,6 +28,7 @@ class Driver {
         ar & mstatus;
         ar & bfs;
         ar & location;
+        ar & cabId; //??
     }
 
 private:
@@ -44,8 +45,10 @@ private:
     AbstractNode *last;
     int descriptor;
     bool clientGotCuuerntPoint;
+    int cabId;
 public:
-    Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *node);
+    Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode
+    *node, int cabId);
 
     Driver();
 
@@ -96,6 +99,8 @@ public:
     void setLastPoint(AbstractNode *node);
 
     AbstractNode *getLastPoint();
+
+    int getCabId();
 };
 
 

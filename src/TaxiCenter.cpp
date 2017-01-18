@@ -37,7 +37,7 @@ TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
  * add driver to taxicenter
  */
 void TaxiCenter::addDriver(int id, int age, MartialStatus mstatus) {
-    Driver *d = new Driver(id, age, mstatus, bfs, map->getFirst());
+    Driver *d = new Driver(id, age, mstatus, bfs, map->getFirst(), 0);
     drivers.push_back(d);
 }
 
@@ -60,20 +60,21 @@ void TaxiCenter::timePassed(int time) {
     list<Trip *>::iterator it = trips.begin();
     Trip *temp = NULL;
 
-    /*
-     * checking if there are trips that need a driver, and assigning one if
-     * possible.
-     */
-    for (it; it != trips.end(); it++) {
-        if ((*it)->getDriver() == NULL && time >= (*it)->getStartTime()) {
-            cout << (*it)->getRideId() << " time: " << time << endl;
-            assignADriverToTrip(*it);
-        }
-    }
-
-    //notifying
+    // notifying. If a trip timer hasn't got a drive, one is assigned to it
+    // and no movement is made.
     for (tick = timers.begin(); tick != timers.end(); tick++) {
-        (*tick)->tock(time);
+        if (time >= (*tick)->getStartTime()) {
+            TripTimer *temp1 = dynamic_cast<TripTimer *> (*tick);
+            if (temp1 != NULL)
+            {
+                if (temp1->getTrip()->getDriver() == NULL)
+                    assignADriverToTrip(temp1->getTrip());
+                else if(time > (*tick)->getStartTime())
+                    (*tick)->tock(time);
+            } else {
+                (*tick)->tock(time);
+            }
+        }
     }
 
     //deleting finished trips
@@ -243,6 +244,7 @@ Driver *TaxiCenter::getDriver(int id) {
 AbstractCab *TaxiCenter::getCab(int id) {
     list<AbstractCab *>::iterator it = cabs.begin();
     for (it; it != cabs.end(); it++) {
+        cout << "CAB ID:" << (*it)->getId() << endl;
         if ((*it)->getId() == id) {
             return *it;
         }

@@ -4,7 +4,8 @@
 
 #include "Driver.h"
 
-Driver::Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *startNode) {
+Driver::Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode
+*startNode, int cabId) {
     this->id = id;
     this->age = age;
     this->mstatus = mstatus;
@@ -18,6 +19,7 @@ Driver::Driver(int id, int age, MartialStatus mstatus, BFS *bfs, AbstractNode *s
     this->descriptor = -1;
     this->clientGotCuuerntPoint = false;
     this->last = NULL;
+    this->cabId = cabId;
 }
 
 Driver::~Driver() {
@@ -119,4 +121,7 @@ AbstractNode *Driver::getLastPoint() {
     return this->last;
 }
 
-
+int Driver::getCabId()
+{
+    return cabId;
+}
