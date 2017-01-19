@@ -5,6 +5,7 @@
 
 #include "TaxiCenter.h"
 #include <pthread.h>
+//#include "../easylogging++.h"
 
 
 /*
@@ -82,7 +83,7 @@ void TaxiCenter::timePassed(int time) {
     while (it != trips.end()) {
         if ((*it)->getDriver() != NULL && (*it)->getEnd()->operator==(*((*it)
                 ->getDriver()->getLocation()))) {
-            cout << "delete Trip:  " << (*it)->getRideId() << endl;
+//            LINFO << "delete Trip:  " << (*it)->getRideId() << endl;
             (*it)->finish();
             temp = *it;
             it = trips.erase(it);
@@ -144,7 +145,7 @@ Driver *TaxiCenter::findClosestDriverToPoint(AbstractNode *p) {
     list<Trip *>::iterator it_t = trips.begin();
 
     for (it_d; it_d != drivers.end(); it_d++) { //going over drivers
-        cout << (*it_d)->getId() << endl;
+//        LINFO << (*it_d)->getId() << endl;
         if ((*it_d)->getLocation()->operator==(*p)) { //if found driver in p
             breaked = false;
 
@@ -244,7 +245,7 @@ Driver *TaxiCenter::getDriver(int id) {
 AbstractCab *TaxiCenter::getCab(int id) {
     list<AbstractCab *>::iterator it = cabs.begin();
     for (it; it != cabs.end(); it++) {
-        cout << "CAB ID:" << (*it)->getId() << endl;
+//        LINFO << "CAB ID:" << (*it)->getId() << endl;
         if ((*it)->getId() == id) {
             return *it;
         }
@@ -318,10 +319,10 @@ void TaxiCenter::assignADriverToTrip(int tripId) {
 void TaxiCenter::assignADriverToTrip(Trip *t) {
     Driver *d = findClosestDriverToPoint(t->getStart());
     if (d != NULL) {
-        cout << t->getRideId() << "    ID OF TRIP " << endl;
-        cout << d->getId() << "   ID OF DRIVER" << endl;
+//        LINFO << t->getRideId() << "    ID OF TRIP " << endl;
+//        LINFO << d->getId() << "   ID OF DRIVER" << endl;
     }
-    // cout << ";;;;" << endl;
+    // LINFO << ";;;;" << endl;
     t->setDriver(d);
 }
 

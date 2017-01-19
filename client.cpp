@@ -5,6 +5,9 @@
 #include "src/Udp.h"
 #include "client.h"
 #include "src/Tcp.h"
+//#include "easylogging++.h"
+
+//_INITIALIZE_EASYLOGGINGPP
 /*#include "easyloggingpp-8.91/easylogging++.h"
 _INITIALIZE_EASYLOGGINGPP*/
 
@@ -73,7 +76,7 @@ void client::setCab() {
     binary_iarchive ia(s2);
     ia >> this->cab;
     this->driver->setCab(this->cab);
-    cout << "the client got his cab" << endl;
+//    LINFO << "the client got his cab" << endl;
     delete this->driver->getTaxi();
 }
 
@@ -99,9 +102,9 @@ void client::sendDriver() {
     binary_oarchive oa(s);
     oa << driver;
     s.flush();
-    cout << "before sending the data" << endl;
+//    LINFO << "before sending the data" << endl;
     this->socket->sendData(serial_str, port);
-    cout << "after sending the data" << endl;
+//    LINFO << "after sending the data" << endl;
     //  delete bfs;
     //  delete node;
     // delete driver;
@@ -146,8 +149,8 @@ void client::getDriverAndTrip() {
         binary_iarchive ia(s2);
         ia >> driver;
         if (driver->getLocation() == NULL) {
-            cout << "close client" << endl;
-            cout << "client number:" << this->driver->getId() << endl;
+//            LINFO << "close client" << endl;
+//            LINFO << "client number:" << this->driver->getId() << endl;
             delete driver->getLocation();
             delete driver->getBFS();
             delete driver;
@@ -158,7 +161,7 @@ void client::getDriverAndTrip() {
         delete this->driver->getBFS();
         delete this->driver;
         this->driver = driver;
-        cout << "the client got his current point:" << *this->driver->getLocation() << endl;
+//        LINFO << "the client got his current point:" << *this->driver->getLocation() << endl;
     }
     /*  }
       if (node != NULL) {

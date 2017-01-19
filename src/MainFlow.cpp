@@ -1,6 +1,7 @@
 #include "MainFlow.h"
 #include "Udp.h"
 #include "Tcp.h"
+//#include "../easylogging++.h"
 
 using namespace std;
 using namespace boost::iostreams;
@@ -79,7 +80,7 @@ void MainFlow::flow() {
             case 1: //New Driver
                 this->numberOfCase = 1;
                 cin >> numOfDrivers;
-                cout << numOfDrivers << endl;
+//                LINFO << numOfDrivers << endl;
                 this->addDriver(numOfDrivers);
                 break;
 
@@ -116,7 +117,7 @@ void MainFlow::flow() {
                         break;
                     }
                 }
-                cout << "got all drivers" << endl;
+//                LINFO << "got all drivers" << endl;
                 if (!this->finishCalculate) {
                     this->taxiCenter->waitForThread();
                     this->finishCalculate = true;
@@ -148,7 +149,7 @@ void MainFlow::flow() {
             driver = this->taxiCenter->getDrivers().front();
         size--;
     }
-    cout << "before finish" << endl;
+//    LINFO << "before finish" << endl;
     // pthread_exit(NULL);
     return;
 }
@@ -157,9 +158,9 @@ void MainFlow::flow() {
 void *MainFlow::handelThread(void *mainFlow1) {
     MainFlow *mainFlow = (MainFlow *) mainFlow1;
 //    int cabId = 0;
-    cout << "before accept" << endl;
+//    LINFO << "before accept" << endl;
     int port = mainFlow->socket->acceptDescriptorCommunicate();
-    cout << "Succuss with the connection with the client" << endl;
+//    LINFO << "Succuss with the connection with the client" << endl;
     char buffer[4096];
     Driver *driver1 = NULL;
     mainFlow->socket->reciveData(buffer, sizeof(buffer), port);
@@ -172,7 +173,7 @@ void *MainFlow::handelThread(void *mainFlow1) {
     delete driver1->getLocation();
     delete driver1->getBFS();
     driver1->setLocation2(node);
-    cout << "after accept" << endl;
+//    LINFO << "after accept" << endl;
     pthread_mutex_lock(&lock);
     driver1->setBFS(mainFlow->taxiCenter->getBFS());
     mainFlow->taxiCenter->addDriver(driver1);
@@ -217,12 +218,12 @@ void *MainFlow::handelThread(void *mainFlow1) {
  * get the driver from the client
  */
 void MainFlow::addDriver(int num) {
-    cout << "in addDriver" << endl;
+//    LINFO << "in addDriver" << endl;
     while (num > 0) {
         pthread_t pthread;
         pthread_create(&pthread, NULL, handelThread, (void *) this);
         //pthread_join(pthread, NULL);
-        //cout << "wait for clients first!!!!!" << endl;
+        //LINFO << "wait for clients first!!!!!" << endl;
         num -= 1;
     }
 }

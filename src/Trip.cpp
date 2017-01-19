@@ -111,7 +111,7 @@ Driver *Trip::getDriver() {
 void *Trip::setCourse(void *trip2) {
     Trip *trip = (Trip *) trip2;
     pthread_mutex_lock(&LockGood);
-    cout << "start do pthread" << endl;
+//    cout << "start do pthread" << endl;
 /*
     LINFO << "start";
 */
@@ -120,7 +120,7 @@ void *Trip::setCourse(void *trip2) {
                                                                 trip->getMap()->getNode(trip->end->getX(),
                                                                                         trip->end->getY()));
     trip->settingCourse(course);
-    cout << "finish do pthread" << endl;
+//    cout << "finish do pthread" << endl;
     trip->getMap()->newRoad();
     pthread_mutex_unlock(&LockGood);
     trip->setFinish(true);

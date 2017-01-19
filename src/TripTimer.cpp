@@ -25,7 +25,7 @@ void TripTimer::tock(int time) {
         this->trip->getDriver()->setClientGotPoint(true);
     }
     if (time > trip->getStartTime()) {
-        cout << "move trip " << trip->getRideId() << endl;
+//        cout << "move trip " << trip->getRideId() << endl;
         trip->moveOneStep();
     }
 }

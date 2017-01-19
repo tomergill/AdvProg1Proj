@@ -5,6 +5,9 @@
 #include "src/Udp.h"
 #include "src/MatrixFactory.h"
 #include <unistd.h>
+//#include "easylogging++.h"
+
+//_INITIALIZE_EASYLOGGINGPP
 
 using namespace std;
 using namespace boost::iostreams;
@@ -27,6 +30,6 @@ int main(int argc, char *argv[]) {
         matrixInput += "|" + obstacle;
     }
     mainFlow.startFlow(matrixInput);
-    cout << "finish flow" << endl;
+//    LINFO << "finish flow" << endl;
     return 0;
 }
