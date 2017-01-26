@@ -50,8 +50,32 @@ MainFlow::MainFlow(MapFactory *factory, int port) {
 /*
  * start the taxi center
  */
-void MainFlow::startFlow(string mapInput) {
-    taxiCenter = new TaxiCenter(mapFactory->buildMap(mapInput));
+void MainFlow::startFlow() {
+    int obsNum, i, h, w;
+    char dummy;
+    string matrixInput, obstacle;
+    Map *map = NULL;
+    while (map == NULL) {
+        getline(cin, matrixInput); //matrix size
+        stringstream s(matrixInput);
+        if (!(s >> h >> dummy >> w) || h < 1 || w < 1 || dummy != ' ')
+        {
+
+        }
+        if (!(cin >> obsNum) || obsNum < 0) {
+            cout << "-1" << endl;
+            cout << "wrong obstacle number" << endl;
+            continue;
+        }
+        for (i = 0; i < obsNum; ++i) { //receiving obstacles
+            getline(cin, obstacle);
+            matrixInput += "|" + obstacle;
+        }
+        map = mapFactory->buildMap(matrixInput);
+        if (map == NULL)
+            cout << "-1" << endl;
+    }
+    taxiCenter = new TaxiCenter(map);
     flow();
 }
 
@@ -367,5 +391,18 @@ bool MainFlow::allDriversInEndPoint() {
     return allFinish;
 }
 
-
+/**
+ * The function checks of the string is an integer, meaning containing only
+ * digits.
+ * @param s string to be checked
+ * @return true if integer, false otherwise
+ */
+bool MainFlow::isStringAnInteger(string s)
+{
+    int i;
+    for (i = 0; i < s.length(); i++)
+        if (!isdigit(s[i]))
+            return false;
+    return true;
+}
 

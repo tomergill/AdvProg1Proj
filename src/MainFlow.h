@@ -41,7 +41,7 @@ public:
 
     MainFlow(MapFactory *factory, int num);
 
-    void startFlow(string mapInput);
+    void startFlow();
 
     void addDriver(int num);
 
@@ -56,6 +56,8 @@ public:
     static void *handelThread(void *mainFlow);
 
     bool allDriversInEndPoint();
+
+    static bool isStringAnInteger(string s);
 
 };
 
