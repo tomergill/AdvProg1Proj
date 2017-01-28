@@ -15,6 +15,7 @@
 #include <list>
 #include <iostream>
 #include <thread_db.h>
+#include "ThreadPool.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ private:
     BFS *bfs;
     list<TimeListener *> timers;
     thread_t thread;
+    ThreadPool *threadpool;
 
     void deletetriplistener(int tripId);
 
@@ -99,6 +101,50 @@ public:
     bool isFreeTripId(int id);
 
     void deleteFirstDriver();
+
+    void addTrip(Trip *d);
+
+//    static void *setCourse(void *course);
+//
+//    void addingJob(TaxiCenter* trip);
+
+    void addingJob(Trip* trip);
+
+    void setDrivers(const list<Driver *> &drivers);
+
+    const list<AbstractCab *> &getCabs() const;
+
+    void setCabs(const list<AbstractCab *> &cabs);
+
+    void setTrips(const list<Trip *> &trips);
+
+    Map *getMap() const;
+
+    void setMap(Map *map);
+
+    BFS *getBfs() const;
+
+    void setBfs(BFS *bfs);
+
+    const list<TimeListener *> &getTimers() const;
+
+    void setTimers(const list<TimeListener *> &timers);
+
+    thread_t getThread() const;
+
+    void setThread(thread_t thread);
+
+    ThreadPool *getThreadpool() const;
+
+    void setThreadpool(ThreadPool *threadpool);
+
+    void deleteTrip(int id);
+
+//    void setNumberOfTrips(int numberOfTrips);
+//
+//    Trip *getCurrentTrip() const;
+//
+//    void setCurrentTrip(Trip *currentTrip);
 };
 
 

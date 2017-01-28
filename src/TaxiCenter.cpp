@@ -4,20 +4,23 @@
 #include <list>
 
 #include "TaxiCenter.h"
+#include "ThreadPool.h"
 #include <pthread.h>
+pthread_mutex_t LockGood1 = PTHREAD_MUTEX_INITIALIZER;
 //#include "../easylogging++.h"
 
 
 /*
  * add passenger and create a trip for him
  */
-void
-TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
+void TaxiCenter::answerCall(int id, Point *start, Point *end, double tarif, int pass,
                        int startTime) {
     int i;
 
     Trip *t = new Trip(id, start, end, tarif, map, startTime);
-    this->createTread(t);
+    //this->createTread(t);
+//    this->setCurrentTrip(t);
+    this->addingJob(t);
     trips.push_back(t);
     for (i = 0; i < pass; i++) {
         //int start_x, start_y, end_x, end_y;
@@ -60,6 +63,7 @@ void TaxiCenter::timePassed(int time) {
     list<TimeListener *>::iterator tick;
     list<Trip *>::iterator it = trips.begin();
     Trip *temp = NULL;
+    bool valid = true;
 
     // notifying. If a trip timer hasn't got a drive, one is assigned to it
     // and no movement is made.
@@ -69,7 +73,26 @@ void TaxiCenter::timePassed(int time) {
             if (temp1 != NULL)
             {
                 if (temp1->getTrip()->getDriver() == NULL)
-                    assignADriverToTrip(temp1->getTrip());
+                {
+                    valid = true;
+                    while (true)
+                    {
+                        if (temp1->getTrip()->isIsFinishBFS())
+                        {
+                            if (temp1->getTrip()->isIsValidEndPoint() == 1)
+                            {
+                                deletetriplistener(temp1->getTrip()
+                                                           ->getRideId());
+                                deleteTrip(temp1->getTrip()->getRideId());
+                                tick = timers.begin();
+                                valid = false;
+                            }
+                            break;
+                        }
+                    }
+                    if (valid)
+                        assignADriverToTrip(temp1->getTrip());
+                }
                 else if(time > (*tick)->getStartTime())
                     (*tick)->tock(time);
             } else {
@@ -106,6 +129,7 @@ TaxiCenter::TaxiCenter(Map *m) {
     trips = {};
     timers = {};
     this->thread = NULL;
+    this->threadpool = new ThreadPool(5);
 }
 
 /*
@@ -116,6 +140,23 @@ void TaxiCenter::printDriverLocation(Driver *driver) {
         cout << *(driver->getLocation()) << "\n";
     } else {
         cout << "-1" << endl;
+    }
+}
+
+void TaxiCenter::deleteTrip(int id)
+{
+    list<Trip *>::iterator it = trips.begin();
+    Trip *temp;
+
+    while (it != trips.end()) {
+        temp = *it;
+        //temp = dynamic_cast<TripTimer *> (*it);
+        if (id == (*it)->getRideId()) {
+            it = trips.erase(it);
+            delete temp;
+        } else {
+            it++;
+        }
     }
 }
 
@@ -217,6 +258,7 @@ TaxiCenter::~TaxiCenter() {
     }
     delete map;
     delete bfs;
+    delete this->threadpool;
 }
 
 /*
@@ -342,30 +384,30 @@ BFS *TaxiCenter::getBFS() {
     return this->bfs;
 }
 
-void TaxiCenter::createTread(Trip *trip) {
-    trip->createPthread();
-}
+//void TaxiCenter::createTread(Trip *trip) {
+//    trip->createPthread();
+//}
 
 void TaxiCenter::deleteFirstDriver() {
     this->drivers.pop_front();
 }
 
-void TaxiCenter::waitForThread() {
-    Trip *arr[this->trips.size()];
-    int i = 0;
-    int size = this->trips.size();
-    while (i < size) {
-        arr[i] = this->trips.front();
-        this->trips.pop_front();
-        i++;
-    }
-    i = 0;
-    while (i < size) {
-        arr[i]->Join();
-        this->trips.push_back(arr[i]);
-        i++;
-    }
-}
+//void TaxiCenter::waitForThread() {
+//    Trip *arr[this->trips.size()];
+//    int i = 0;
+//    int size = this->trips.size();
+//    while (i < size) {
+//        arr[i] = this->trips.front();
+//        this->trips.pop_front();
+//        i++;
+//    }
+//    i = 0;
+//    while (i < size) {
+//        arr[i]->Join();
+//        this->trips.push_back(arr[i]);
+//        i++;
+//    }
+//}
 
 void TaxiCenter::pushDriver(Driver *driver) {
     this->drivers.push_back(driver);
@@ -396,4 +438,119 @@ bool TaxiCenter::isFreeTripId(int id) {
             return false;
     }
     return true;
+}
+
+//void TaxiCenter::addingJob(TaxiCenter *trip) {
+//    Job *job = new Job(trip->setCourse, (void *) trip);
+//    this->threadpool->addJob(job);
+//}
+
+void TaxiCenter::addingJob(Trip *trip) {
+    Job *job = new Job(trip->setCourse, (void *) trip);
+    this->threadpool->addJob(job);
+}
+
+void TaxiCenter::setDrivers(const list<Driver *> &drivers) {
+    TaxiCenter::drivers = drivers;
+}
+
+const list<AbstractCab *> &TaxiCenter::getCabs() const {
+    return cabs;
+}
+
+void TaxiCenter::setCabs(const list<AbstractCab *> &cabs) {
+    TaxiCenter::cabs = cabs;
+}
+
+void TaxiCenter::setTrips(const list<Trip *> &trips) {
+    TaxiCenter::trips = trips;
+}
+
+Map *TaxiCenter::getMap() const {
+    return map;
+}
+
+void TaxiCenter::setMap(Map *map) {
+    TaxiCenter::map = map;
+}
+
+BFS *TaxiCenter::getBfs() const {
+    return bfs;
+}
+
+void TaxiCenter::setBfs(BFS *bfs) {
+    TaxiCenter::bfs = bfs;
+}
+
+const list<TimeListener *> &TaxiCenter::getTimers() const {
+    return timers;
+}
+
+void TaxiCenter::setTimers(const list<TimeListener *> &timers) {
+    TaxiCenter::timers = timers;
+}
+
+thread_t TaxiCenter::getThread() const {
+    return thread;
+}
+
+void TaxiCenter::setThread(thread_t thread) {
+    TaxiCenter::thread = thread;
+}
+
+ThreadPool *TaxiCenter::getThreadpool() const {
+    return threadpool;
+}
+
+void TaxiCenter::setThreadpool(ThreadPool *threadpool) {
+    TaxiCenter::threadpool = threadpool;
+}
+
+//void TaxiCenter::setNumberOfTrips(int numberOfTrips) {
+//    TaxiCenter::numberOfTrips = numberOfTrips;
+//}
+
+
+//void *TaxiCenter::setCourse(void *trip2) {
+//    TaxiCenter *taxiCenter = (TaxiCenter *) trip2;
+//    Trip *trip = taxiCenter->getCurrentTrip();
+//    cout << "before lock" << endl;
+//    pthread_mutex_lock(&LockGood1);
+//
+//    queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getNode(trip->getXStartPoint(),
+//                                                                                        trip->getYStartPoint()),
+//                                                                trip->getMap()->getNode(trip->getXEndPoint(),
+//                                                                                        trip->getYEndPoint()));
+//    if (course.empty()) {
+//        cout << "the course is not good" << endl;
+//        trip->setIsValidEndPoint(1);
+//    } else {
+//        cout << "the course is good" << endl;
+////    cout << "finish do pthread" << endl;
+//        trip->setIsValidEndPoint(2);
+//        trip->settingCourse(course);
+//    }
+//    trip->getMap()->newRoad();
+//    trip->setIsFinishBFS(true);
+//
+//    if (trip->isIsValidEndPoint() == 1) {
+//        pthread_mutex_unlock(&LockGood1);
+//        return NULL;
+//    }
+//    taxiCenter->addTrip(trip);
+//    pthread_mutex_unlock(&LockGood1);
+//    return NULL;
+//}
+
+//Trip *TaxiCenter::getCurrentTrip() const {
+//    return currentTrip;
+//}
+//
+//void TaxiCenter::setCurrentTrip(Trip *currentTrip) {
+//    TaxiCenter::currentTrip = currentTrip;
+//}
+
+void TaxiCenter::addTrip(Trip *d) {
+    this->trips.push_back(d);
+
 }

@@ -242,14 +242,6 @@ void MainFlow::flow() {
                      /* && taxistream.eof()*/)
                     || !taxiCenter->isFreeCabId(cabId)) {
                     cout << "-1" << endl;
-//                    cout << "wrong taxi parsing" << endl;
-//                    cout << taxistream.fail() << endl;
-//                    cout << taxistream.eof() << endl;
-//                    cout << cabId << endl;
-//                    cout << dummy << endl;
-//                    cout << taxi_type << endl;
-//                    cout << manu << endl;
-//                    cout << cColor << endl;
                     input = getInput();
                     continue;
                 }
@@ -286,10 +278,10 @@ void MainFlow::flow() {
                     }
                 }
 //                LINFO << "got all drivers" << endl;
-                if (!this->finishCalculate) {
-                    this->taxiCenter->waitForThread();
-                    this->finishCalculate = true;
-                }
+//                if (!this->finishCalculate) {
+//                    this->taxiCenter->waitForThread();
+//                    this->finishCalculate = true;
+//                }
                 time++;
                 taxiCenter->timePassed(time);
                 this->numberOfCase = 9;

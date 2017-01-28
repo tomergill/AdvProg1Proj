@@ -39,12 +39,14 @@ private:
     BFS *bfs;
     queue<AbstractNode *> course;
     int time;
-    pthread_t* pthread;
-    bool finishh;
+
+    int isValidEndPoint;
+    bool isFinishBFS;
 
 public:
     Trip(int id, Point *start, Point *end, double tarif, Map *map,
          int startTime);
+
     Trip();
 
     ~Trip();
@@ -52,7 +54,8 @@ public:
     void addPassenger(Passenger *p);
 
     void move();
-    void createPthread();
+
+    //oid createPthread();
     int getPassengersNum();
 
     int getRideId() const;
@@ -66,7 +69,7 @@ public:
     void moveOneStep();
 
     //queue<AbstractNode *> *getCourse();
-    void Join();
+    //void Join();
     Driver *getDriver();
 
     void setDriver(Driver *driver);
@@ -85,7 +88,7 @@ public:
 
     Point getEndPoint();
 
-    pthread_t*  getPthread();
+    //pthread_t*  getPthread();
 
 
     BFS *getBfs();
@@ -120,13 +123,25 @@ public:
 
     void setTime(int time);
 
-    void setPthread(pthread_t* pthread);
+    //void setPthread(pthread_t* pthread);
 
-    void setPthread_mutex(const pthread_mutex_t &pthread_mutex);
+    // void setPthread_mutex(const pthread_mutex_t &pthread_mutex);
 
-    void setFinish(bool finish);
+    int isIsValidEndPoint() const;
 
-    bool isFinishh() ;
+    void setIsValidEndPoint(int isValidEndPoint);
+
+    bool isIsFinishBFS() const;
+
+    void setIsFinishBFS(bool isFinishBFS);
+
+    int getXStartPoint();
+
+    int getYStartPoint();
+
+    int getXEndPoint();
+
+    int getYEndPoint();
 };
 
 

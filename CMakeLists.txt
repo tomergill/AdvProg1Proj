@@ -4,7 +4,7 @@ set(g++ -std=c++0x main.cpp BFS.cpp -lboost_serialization -o client)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread")
 set(BOOST_ROOT CACHE PATH "/usr/include/boost/")
-find_package(Boost 1.58.0 COMPONENTS serialization system)
+find_package(Boost 1.58.0 COMPONENTS serialization system regex)
 include_directories(${Boost_INCLUDE_DIR})
 
 #[[add_subdirectory(lib/googletest-master)
