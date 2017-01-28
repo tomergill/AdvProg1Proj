@@ -1,8 +1,6 @@
 #include "MainFlow.h"
 #include "Udp.h"
 #include "Tcp.h"
-#include "MatrixMap.h"
-#include <boost/regex.hpp>
 //#include "../easylogging++.h"
 
 using namespace std;
@@ -12,12 +10,11 @@ using namespace boost::iostreams;
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t lock2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t lock3 = PTHREAD_MUTEX_INITIALIZER;
-pthread_t pthread1;
-pthread_t pthread2;
 int numberOfDrivers = 0;
 int numberOfClients = 0;
 bool was9 = false;
 int closeConections = 0;
+int numberOfTrips=0;
 
 /*
  * c-tor of main flow
@@ -52,81 +49,8 @@ MainFlow::MainFlow(MapFactory *factory, int port) {
 /*
  * start the taxi center
  */
-void MainFlow::startFlow() { ;
-    int obsNum, i, h, w, j;
-    char dummy;
-    string matrixInput, obstacle;
-    Map *map = NULL;
-    boost::regex mapSizes(" *([0-9])+ ([0-9])+"), number("[0-9]+"),
-            obstacleregex("[0-9]+,[0-9]+");
-
-    while (map == NULL) {
-        getline(cin, matrixInput); //matrix size
-//        cout << '"' << matrixInput << '"' << endl;
-        if (!boost::regex_match(matrixInput, mapSizes))
-        {
-            cout << "-1" << endl;
-//            cout << "ERROR regex map sizes not match" << endl;
-            continue;
-        }
-        stringstream s(matrixInput);
-        //s >> h >> /*dummy >>*/ w /*>> dummy*/;
-        if (!(s >> h >> w && s.eof()))
-        {
-            cout << "-1" << endl;
-//            cout << "ERROR parsing" << endl;
-            continue;
-        }
-        if (h < 1)
-        {
-            cout << "-1" << endl;
-//            cout << "height less than 1" << endl;
-            continue;
-        }
-        if (w < 1)
-        {
-            cout << "-1" << endl;
-//            cout << "width less than 1" << endl;
-            continue;
-        }
-        getline(cin, obstacle);
-//        cout << '"' << obstacle << '"' << endl;
-//        if (!isStringAnInteger(obstacle))
-//        {
-//            cout << "-1" <<endl;
-//            cout << "obstacle not int" << endl;
-//            continue;
-//        }
-        if (!boost::regex_match(obstacle, number))
-        {
-            cout << "-1" << endl;
-//            cout << "ERROR regex obstacle number not match" << endl;
-            continue;
-        }
-        obsNum = atoi(&obstacle[0]);
-        if (obsNum < 0 || obsNum >= h * w) {
-            cout << "-1" << endl;
-//            cout << "wrong obstacle number" << endl;
-            continue;
-        }
-//        getline(cin, obstacle);
-//        cout << '"' << obsNum << '"' << endl;
-        for (i = 0; i < obsNum; ++i) { //receiving obstacles
-            getline(cin, obstacle);
-//            cout << '"' << obstacle << '"' << endl;
-            if (!boost::regex_match(obstacle, obstacleregex))
-            {
-                cout << "-1" << endl;
-//                cout << "ERROR obstacle wrong" << endl;
-                continue;
-            }
-            matrixInput += "|" + obstacle;
-        }
-        map = mapFactory->buildMap(matrixInput);
-        if (map == NULL)
-            cout << "-1" << endl;
-    }
-    taxiCenter = new TaxiCenter(map);
+void MainFlow::startFlow(string mapInput) {
+    taxiCenter = new TaxiCenter(mapFactory->buildMap(mapInput));
     flow();
 }
 
@@ -134,27 +58,6 @@ MainFlow::~MainFlow() {
     delete taxiCenter;
     if (socket != NULL)
         delete socket;
-}
-
-/**
- * @return the input for the switch case
- */
-int MainFlow::getInput()
-{
-    string str;
-    boost::regex inp("(1|2|3|4|7|9)");
-    int i;
-
-    while (true) {
-        getline(cin, str);
-        stringstream s(str);
-        if (!boost::regex_match(str, inp) || !(s >> i && s.eof())) {
-            cout << "-1" << endl;
-//            cout << "wrong input mission" << endl;
-            continue;
-        }
-        return i;
-    }
 }
 
 /*
@@ -169,90 +72,31 @@ void MainFlow::flow() {
     CarColor color = CarColor::R;
     CarManufactur manufactur = CarManufactur::F;
     char dummy = ',', mstatus, cColor, manu;
-    string inputline = "";
-    boost::regex taxi("[0-9]+,(1|2),(H|S|T|F),(R|B|G|P|W)"), number("[0-9]+")
-    , tripregex("[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+(.[0-9]+)?,[0-9]+");
 
-    input = getInput();
+    cin >> input;
     while (input != 7) {
         switch (input) {
             case 1: //New Driver
-            {
                 this->numberOfCase = 1;
-                getline(cin, inputline);
-                stringstream dnumstream(inputline);
-                if (!boost::regex_match(inputline, number)
-                    || !(dnumstream >> numOfDrivers && dnumstream.eof()))
-                {
-                    cout << "-1" << endl;
-                    input = getInput();
-                    continue;
-                }
+                cin >> numOfDrivers;
 //                LINFO << numOfDrivers << endl;
                 this->addDriver(numOfDrivers);
                 break;
-            }
+
             case 2: //New Trip
-            {
                 this->numberOfCase = 2;
-                getline(cin, inputline);
-                stringstream tripstream(inputline);
-                if (!boost::regex_match(inputline, tripregex)
-                    || !(tripstream >> rideId >> dummy >> start_x >> dummy
-                                    >> start_y >> dummy >> end_x >> dummy
-                                    >> end_y >> dummy >> pass_num >> dummy
-                                    >> tariff >> dummy >> time1
-                         && tripstream.eof())) {
-                    cout << "-1" << endl;
-                    input = getInput();
-                    continue;
-                }
-                MatrixMap *mat = (MatrixMap *)taxiCenter->getMap();
-                if (start_x < 0 || start_x >= mat->xlimit()
-                    || start_y < 0 || start_y >= mat->ylimit()
-                    || end_x < 0 || end_x >= mat->xlimit()
-                    || end_y < 0 || end_y >= mat->ylimit()
-                    || (start_x == end_x && start_y == end_y)
-                    || pass_num < 1 || time1 < 1
-                    || !taxiCenter->isFreeTripId(rideId))
-                {
-                    cout << "-1" << endl;
-                    input = getInput();
-                    continue;
-                }
+                cin >> rideId >> dummy >> start_x >> dummy >> start_y >> dummy
+                    >> end_x >> dummy >> end_y >> dummy >> pass_num >> dummy
+                    >> tariff >> dummy >> time1;
                 taxiCenter->answerCall(rideId, new Point(start_x, start_y),
                                        new Point(end_x, end_y), tariff,
                                        pass_num, time1);
                 break;
-            }
             case 3: //New Cab
-            {
                 this->numberOfCase = 3;
-                getline(cin, inputline);
-                if (!boost::regex_match(inputline, taxi)) {
-                    cout << "-1" << endl;
-//                    cout << "no match regex taxi" << endl;
-                    input = getInput();
-                    continue;
-                }
-                stringstream taxistream(inputline);
-                //cout << inputline.length() << endl;
-                if (!(taxistream >> cabId >> dummy >> taxi_type >> dummy
-                                 >> manu >> dummy >> cColor
-                     /* && taxistream.eof()*/)
-                    || !taxiCenter->isFreeCabId(cabId)) {
-                    cout << "-1" << endl;
-//                    cout << "wrong taxi parsing" << endl;
-//                    cout << taxistream.fail() << endl;
-//                    cout << taxistream.eof() << endl;
-//                    cout << cabId << endl;
-//                    cout << dummy << endl;
-//                    cout << taxi_type << endl;
-//                    cout << manu << endl;
-//                    cout << cColor << endl;
-                    input = getInput();
-                    continue;
-                }
+                numberOfTrips++;
+                cin >> cabId >> dummy >> taxi_type >> dummy >> manu >> dummy
+                    >> cColor;
                 manufactur = getManuByChar(manu);
                 color = getColorByChar(cColor);
                 if (taxi_type == 1)
@@ -261,23 +105,11 @@ void MainFlow::flow() {
                     taxiCenter->addTaxi(new LuxuryCab(cabId, manufactur,
                                                       color));
                 break;
-            }
             case 4: //Print driver's location
-            {
                 this->numberOfCase = 4;
-                getline(cin, inputline);
-                stringstream s(inputline);
-                if (!boost::regex_match(inputline, number) || !(s >> driverId
-                                                                && s.eof()))
-                {
-                    cout << "-1" << endl;
-//                    cout << "no match regex taxi" << endl;
-                    input = getInput();
-                    continue;
-                }
+                cin >> driverId;
                 taxiCenter->printDriverLocation(driverId);
                 break;
-            }
             case 9: //move trips
                 was9 = true;
                 while (true) {
@@ -285,11 +117,19 @@ void MainFlow::flow() {
                         break;
                     }
                 }
+            /*    while(!this->taxiCenter->getThreadpool()->isEmpty()){
+                    sleep(1);
+                }*/
+                // terminate
+              //  cout<<"before join"<<endl;
+                //this->taxiCenter->getThreadpool()->terminate();
+             //   cout<<"after join"<<endl;
 //                LINFO << "got all drivers" << endl;
-                if (!this->finishCalculate) {
-                    this->taxiCenter->waitForThread();
-                    this->finishCalculate = true;
-                }
+                /* if (!this->finishCalculate) {
+                     this->taxiCenter->waitForThread();
+                     this->finishCalculate = true;
+                 }*/
+
                 time++;
                 taxiCenter->timePassed(time);
                 this->numberOfCase = 9;
@@ -298,7 +138,7 @@ void MainFlow::flow() {
             default:
                 break;
         }
-        input = getInput();
+        cin >> input;
     }
     ///
     this->numberOfCase = 7;
@@ -535,18 +375,5 @@ bool MainFlow::allDriversInEndPoint() {
     return allFinish;
 }
 
-/**
- * The function checks of the string is an integer, meaning containing only
- * digits.
- * @param s string to be checked
- * @return true if integer, false otherwise
- */
-bool MainFlow::isStringAnInteger(string s)
-{
-    int i;
-    for (i = 0; i < s.length(); i++)
-        if (!isdigit(s[i]))
-            return false;
-    return true;
-}
+
 

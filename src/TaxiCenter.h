@@ -12,6 +12,7 @@
 #include "BFS.h"
 #include "TimeListener.h"
 #include "TripTimer.h"
+#include "ThreadPool.h"
 #include <list>
 #include <iostream>
 #include <thread_db.h>
@@ -29,10 +30,12 @@ private:
     list<Trip *> trips;
     Map *map;
     BFS *bfs;
+    Trip* currentTrip;
     list<TimeListener *> timers;
     thread_t thread;
-
+    ThreadPool* threadpool;
     void deletetriplistener(int tripId);
+    int numberOfTrips;
 
 public:
     Driver *findClosestDriverToPoint(AbstractNode *p);
@@ -43,9 +46,9 @@ public:
     void addDriver(int id, int age, MartialStatus mstatus);
 
     void addDriver(Driver *d);
-
-    void waitForThread();
-
+    void addTrip(Trip *d);
+   // void waitForThread();
+    static void *setCourse(void *course);
     void addTaxi(AbstractCab *t);
 
     AbstractNode *getFirst();
@@ -55,6 +58,8 @@ public:
     TaxiCenter(Map *m);
 
     void pushDriver(Driver *driver);
+    void addingJob(TaxiCenter* trip);
+    void addingJob(Trip* trip);
 
     void printDriverLocation(Driver *driver);
 
@@ -92,13 +97,42 @@ public:
 
     AbstractNode *getNode(int x, int y);
 
-    Map* getMap();
-
-    bool isFreeCabId(int id);
-
-    bool isFreeTripId(int id);
 
     void deleteFirstDriver();
+
+    void setDrivers(const list<Driver *> &drivers);
+
+    const list<AbstractCab *> &getCabs() const;
+
+    void setCabs(const list<AbstractCab *> &cabs);
+
+    void setTrips(const list<Trip *> &trips);
+
+    Map *getMap() const;
+
+    void setMap(Map *map);
+
+    BFS *getBfs() const;
+
+    void setBfs(BFS *bfs);
+
+    const list<TimeListener *> &getTimers() const;
+
+    void setTimers(const list<TimeListener *> &timers);
+
+    thread_t getThread() const;
+
+    void setThread(thread_t thread);
+
+    ThreadPool *getThreadpool() const;
+
+    void setThreadpool(ThreadPool *threadpool);
+
+    void setNumberOfTrips(int numberOfTrips);
+
+    Trip *getCurrentTrip() const;
+
+    void setCurrentTrip(Trip *currentTrip);
 };
 
 

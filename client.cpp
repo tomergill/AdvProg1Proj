@@ -5,7 +5,6 @@
 #include "src/Udp.h"
 #include "client.h"
 #include "src/Tcp.h"
-#include <boost/regex.hpp>
 //#include "easylogging++.h"
 
 //_INITIALIZE_EASYLOGGINGPP
@@ -22,13 +21,11 @@ using namespace boost::iostreams;
  */
 int main(int argc, char *argv[]) {
     client *client1 = new client(atoi(argv[2]));
-    int status = client1->sendDriver(); // send the driver
-    if (!status) {
-        client1->setCab(); // set the cab to the driver
-        client1->getDriverAndTrip(); // get trips and drivers
-    }
+    client1->sendDriver(); // send the driver
+    client1->setCab(); // set the cab to the driver
+    client1->getDriverAndTrip(); // get trips and drivers
     delete client1; //delete the client
-    return status;
+    return 0;
 }
 
 /*
@@ -60,11 +57,9 @@ client::client(int num) {
 client::~client() {
     delete this->socket;
     //  delete this->driver->getTaxi();
-    if (this->driver != NULL) {
-        delete this->driver->getLocation();
-        delete this->driver->getBFS();
-        delete driver;
-    }
+    delete this->driver->getLocation();
+    delete this->driver->getBFS();
+    delete driver;
     //  delete trip;
     //delete cab;
 }
@@ -88,24 +83,14 @@ void client::setCab() {
 /*
  * send the driver we create
  */
-int client::sendDriver() {
+void client::sendDriver() {
     int input, driverId = 0, age = 0, experience = 0, cabId = 0;
     MartialStatus status = MartialStatus::S;
     char dummy = ',', mstatus;
-    boost::regex driveregex("[0-9]+,[0-9]+,(S|M|D|W),[0-9]+,[0-9]+");
-    string inputline = "";
-
-    getline(cin, inputline);
-    stringstream stream(inputline);
-    if (!boost::regex_match(inputline, driveregex)
-        || !(stream >> driverId >> dummy >> age >> dummy >> mstatus >> dummy
-                    >> experience >> dummy >> cabId && stream.eof())
-        || age < 1 || experience < 0)
-    {
-        return 1;
-    }
     this->socket->initialize();
     int port = this->socket->acceptDescriptorCommunicate();
+    cin >> driverId >> dummy >> age >> dummy >> mstatus >> dummy
+        >> experience >> dummy >> cabId;
     status = getStatusByChar(mstatus);
     BFS *bfs = new BFS();
     AbstractNode *node = new Node(Point(0, 0));
@@ -123,7 +108,6 @@ int client::sendDriver() {
     //  delete bfs;
     //  delete node;
     // delete driver;
-    return 0;
 }
 
 /*

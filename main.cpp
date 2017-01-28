@@ -18,9 +18,18 @@ using namespace boost::iostreams;
  * the main class of the server
  */
 int main(int argc, char *argv[]) {
+    int obsNum, i;
+    string matrixInput, obstacle;
     MatrixFactory factory;
     MainFlow mainFlow(&factory, atoi(argv[1]));
-    mainFlow.startFlow();
+
+    getline(cin, matrixInput); //matrix size
+    cin >> obsNum; //number of obstacles
+    for (i = 0; i < obsNum; ++i) { //receiving obstacles
+        cin >> obstacle;
+        matrixInput += "|" + obstacle;
+    }
+    mainFlow.startFlow(matrixInput);
 //    LINFO << "finish flow" << endl;
     return 0;
 }

@@ -3,7 +3,6 @@
 //
 
 #include "MatrixMap.h"
-#include <iostream>
 
 /**
  * c-tor of matrix.
@@ -60,7 +59,6 @@ MatrixMap::MatrixMap(int x1, int y1, vector<Point> *vec) {
     vector<Point>::iterator it = vec->begin();
     for (it; it != vec->end(); it++)
     {
-//        cout << "(" << it->getX() << ", " << it->getY() << ")" << endl;
         array[it->getX()][it->getY()].setObstacle(true);
     }
 }}
@@ -156,11 +154,8 @@ void MatrixMap::newRoad() {
 
 MatrixMap::~MatrixMap(){}
 
-int MatrixMap::xlimit()
-{
-    return x;
+AbstractNode *MatrixMap::getNode(AbstractNode *node) {
+    return NULL;
 }
-
-int MatrixMap::ylimit() {return y;}
 
 BOOST_CLASS_EXPORT(MatrixMap)

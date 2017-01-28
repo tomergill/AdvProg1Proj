@@ -27,7 +27,7 @@ public:
     virtual void newRoad()=0;
 
     virtual AbstractNode *getNode(int x, int y) =0;
-
+    virtual AbstractNode *getNode(AbstractNode* node) =0;
     virtual ~Map() = 0;
 
 //    virtual bool operator==(const Map &node2)=0;
