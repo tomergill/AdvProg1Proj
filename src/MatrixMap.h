@@ -38,7 +38,7 @@ public:
     AbstractNode *getFirst();
 
     AbstractNode *getNode(int x, int y);
-    AbstractNode *getNode(AbstractNode* node);
+
     AbstractNode *getNode(Point p);
 
     void newRoad();
@@ -52,6 +52,10 @@ public:
     bool downNeighbour(Point p);
 
     ~MatrixMap();
+
+    int xlimit();
+
+    int ylimit();
 
 //    bool operator==(const Map &matrix2);
 

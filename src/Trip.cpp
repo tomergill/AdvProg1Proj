@@ -22,8 +22,7 @@ Trip::Trip(int id, Point *start, Point *end, double tarif, Map *map,
     this->map = map;
     this->bfs = new BFS();
     this->time = startTime;
-    this->isValidEndPoint = 0;
-    this->isFinishBFS = false;
+    this->finishh = false;
 }
 
 /*
@@ -38,6 +37,7 @@ Trip::~Trip() {
         delete p;
     }
     delete bfs;
+    delete this->pthread;
 }
 
 /*
@@ -119,18 +119,11 @@ void *Trip::setCourse(void *trip2) {
                                                                                         trip->start->getY()),
                                                                 trip->getMap()->getNode(trip->end->getX(),
                                                                                         trip->end->getY()));
-    if (course.empty()) {
-      //  cout << "the course is not good" << endl;
-        trip->setIsValidEndPoint(1);
-    } else {
-      //  cout << "the course is good" << endl;
+    trip->settingCourse(course);
 //    cout << "finish do pthread" << endl;
-        trip->setIsValidEndPoint(2);
-        trip->settingCourse(course);
-    }
     trip->getMap()->newRoad();
-    trip->setIsFinishBFS(true);
     pthread_mutex_unlock(&LockGood);
+    trip->setFinish(true);
     return NULL;
 }
 
@@ -193,11 +186,9 @@ Point Trip::getEndPoint() {
     return *(this->end);
 }
 
-/*
 pthread_t *Trip::getPthread() {
     return pthread;
 }
-*/
 
 BFS *Trip::getBfs() {
     return bfs;
@@ -263,34 +254,24 @@ void Trip::setTime(int time) {
     Trip::time = time;
 }
 
-int Trip::isIsValidEndPoint() const {
-    return isValidEndPoint;
+void Trip::setPthread(pthread_t *pthread) {
+    Trip::pthread = pthread;
 }
 
-void Trip::setIsValidEndPoint(int isValidEndPoint) {
-    Trip::isValidEndPoint = isValidEndPoint;
+
+void Trip::setFinish(bool finish) {
+    Trip::finishh = finish;
 }
 
-bool Trip::isIsFinishBFS() const {
-    return isFinishBFS;
+bool Trip::isFinishh() {
+    return finishh;
 }
 
-void Trip::setIsFinishBFS(bool isFinishBFS) {
-    Trip::isFinishBFS = isFinishBFS;
+void Trip::createPthread() {
+    this->pthread = new pthread_t();
+    pthread_create(this->pthread, NULL, this->setCourse, (void *) this);
 }
 
-int Trip::getXStartPoint() {
-    return this->start->getX();
-}
-
-int Trip::getYStartPoint() {
-    return this->start->getY();
-}
-
-int Trip::getXEndPoint() {
-    return this->end->getX();
-}
-
-int Trip::getYEndPoint() {
-    return this->end->getY();
+void Trip::Join() {
+    pthread_join(*this->pthread, NULL);
 }
