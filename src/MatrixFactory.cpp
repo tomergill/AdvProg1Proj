@@ -30,21 +30,21 @@ Map *MatrixFactory::buildMap(string s) {
     /*Parsing the Map's size*/
     try {
         if (!MainFlow::isStringAnInteger(&temp[0])) {
-            cout << "wrong row number" << endl;
+//            cout << "wrong row number" << endl;
             throw exception();
         }
         rowNum = atoi(&temp[0]);
         temp = strtok(NULL, " ,|");
         if (!MainFlow::isStringAnInteger(&temp[0])) {
-            cout << "wrong column number" << endl;
+//            cout << "wrong column number" << endl;
             throw exception();
         }
         colNum = atoi(&temp[0]);
 
-        cout << "aaa" << endl;
+//        cout << "aaa" << endl;
 
         if (rowNum < 1 || colNum < 1) {
-            cout << "wrong matrix sizes" << endl;
+//            cout << "wrong matrix sizes" << endl;
             throw exception();
         }
 
@@ -56,14 +56,14 @@ Map *MatrixFactory::buildMap(string s) {
                 break;
             if (!MainFlow::isStringAnInteger(x)
                 && !MainFlow::isStringAnInteger(y)) {
-                cout << "obstacle not integer" << endl;
+//                cout << "obstacle not integer" << endl;
                 throw exception();
             }
             X = atoi(x);
             Y = atoi(y);
             if (X < 0 || Y < 0 || (X == 0 && Y == 0)
                 || X >= rowNum || Y >= colNum) {
-                cout << "problem with obstacle's cordinates" << endl;
+//                cout << "problem with obstacle's cordinates" << endl;
                 throw exception();
             }
             vec->push_back(Point(X, Y));

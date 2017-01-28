@@ -18,7 +18,7 @@ public:
 
     void setCab();
 
-    void sendDriver();
+    int sendDriver();
 
     void getDriverAndTrip();
 

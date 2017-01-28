@@ -92,6 +92,11 @@ public:
 
     AbstractNode *getNode(int x, int y);
 
+    Map* getMap();
+
+    bool isFreeCabId(int id);
+
+    bool isFreeTripId(int id);
 
     void deleteFirstDriver();
 };

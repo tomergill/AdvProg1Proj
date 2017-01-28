@@ -115,7 +115,7 @@ void TaxiCenter::printDriverLocation(Driver *driver) {
     if (driver != NULL) {
         cout << *(driver->getLocation()) << "\n";
     } else {
-        cout << "(-1,-1)" << endl;
+        cout << "-1" << endl;
     }
 }
 
@@ -371,4 +371,29 @@ void TaxiCenter::pushDriver(Driver *driver) {
     this->drivers.push_back(driver);
 }
 
+Map* TaxiCenter::getMap()
+{
+    return map;
+}
 
+bool TaxiCenter::isFreeCabId(int id) {
+    list<AbstractCab *>::iterator it;
+
+    for (it = cabs.begin(); it != cabs.end(); it++)
+    {
+        if ((*it)->getId() == id)
+            return false;
+    }
+    return true;
+}
+
+bool TaxiCenter::isFreeTripId(int id) {
+    list<Trip *>::iterator it;
+
+    for (it = trips.begin(); it != trips.end(); it++)
+    {
+        if ((*it)->getRideId() == id)
+            return false;
+    }
+    return true;
+}

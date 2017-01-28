@@ -53,6 +53,10 @@ public:
 
     ~MatrixMap();
 
+    int xlimit();
+
+    int ylimit();
+
 //    bool operator==(const Map &matrix2);
 
 };

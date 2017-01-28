@@ -34,6 +34,8 @@ private:
 
     CarColor getColorByChar(char c);
 
+    int getInput();
+
 public:
     ~MainFlow();
 
@@ -58,7 +60,6 @@ public:
     bool allDriversInEndPoint();
 
     static bool isStringAnInteger(string s);
-
 };
 
 #endif //TESTS_MAINFLOW_H
