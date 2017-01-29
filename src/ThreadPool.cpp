@@ -68,6 +68,11 @@ void ThreadPool::terminate() {
 
 ThreadPool::~ThreadPool() {
     this->terminate();
+    while (!jobs_queue.empty()) {
+        Job *job = jobs_queue.front();
+        jobs_queue.pop();
+        delete job;
+    }
     delete[] threads;
     pthread_mutex_destroy(&lock);
 }
