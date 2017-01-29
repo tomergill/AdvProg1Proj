@@ -111,20 +111,15 @@ Driver *Trip::getDriver() {
 void *Trip::setCourse(void *trip2) {
     Trip *trip = (Trip *) trip2;
     pthread_mutex_lock(&LockGood);
-//    cout << "start do pthread" << endl;
-/*
-    LINFO << "start";
-*/
+
     queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getNode(trip->start->getX(),
                                                                                         trip->start->getY()),
                                                                 trip->getMap()->getNode(trip->end->getX(),
                                                                                         trip->end->getY()));
+   // cout << course.size() << endl;
     if (course.empty()) {
-//        cout << "the course is not good" << endl;
         trip->setIsValidEndPoint(1);
     } else {
-//        cout << "the course is good" << endl;
-//    cout << "finish do pthread" << endl;
         trip->setIsValidEndPoint(2);
         trip->settingCourse(course);
     }

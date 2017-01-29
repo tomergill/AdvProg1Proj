@@ -57,6 +57,7 @@ void MainFlow::startFlow() { ;
     char dummy;
     string matrixInput, obstacle;
     Map *map = NULL;
+    bool cont = false;
     boost::regex mapSizes(" *([0-9])+ ([0-9])+"), number("[0-9]+"),
             obstacleregex("[0-9]+,[0-9]+");
 
@@ -118,9 +119,15 @@ void MainFlow::startFlow() { ;
             {
                 cout << "-1" << endl;
 //                cout << "ERROR obstacle wrong" << endl;
-                continue;
+                cont = true;
+                break;
             }
             matrixInput += "|" + obstacle;
+        }
+        if (cont)
+        {
+            cont = false;
+            continue;
         }
         map = mapFactory->buildMap(matrixInput);
         if (map == NULL)
@@ -182,7 +189,8 @@ void MainFlow::flow() {
                 getline(cin, inputline);
                 stringstream dnumstream(inputline);
                 if (!boost::regex_match(inputline, number)
-                    || !(dnumstream >> numOfDrivers && dnumstream.eof()))
+                    || !(dnumstream >> numOfDrivers && dnumstream.eof())
+                    || numOfDrivers < 1)
                 {
                     cout << "-1" << endl;
                     input = getInput();

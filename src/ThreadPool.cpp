@@ -9,12 +9,18 @@
 #include <unistd.h>
 #include <iostream>
 
+/*
+ * start doint the jobs
+ */
 static void *startJobs(void *arg) {
     ThreadPool *pool = (ThreadPool *) arg;
     pool->doJobs();
     return NULL;
 }
 
+/*
+ * do all jobs
+ */
 void ThreadPool::doJobs() {
     while (!stop) {
         pthread_mutex_lock(&lock);
@@ -23,6 +29,7 @@ void ThreadPool::doJobs() {
             jobs_queue.pop();
             pthread_mutex_unlock(&lock);
             job->execute();
+            delete job;
         } else {
             pthread_mutex_unlock(&lock);
             sleep(1);
@@ -31,10 +38,16 @@ void ThreadPool::doJobs() {
     pthread_exit(NULL);
 }
 
+/*
+ * add job to the thread pool
+ */
 void ThreadPool::addJob(Job *job) {
     jobs_queue.push(job);
 }
 
+/*
+ * c-tor of thread pool
+ */
 ThreadPool::ThreadPool(int threads_num) : threads_num(threads_num), stop(false) {
     // TODO Auto-generated constructor stub
     threads = new pthread_t[threads_num];
@@ -54,7 +67,7 @@ void ThreadPool::terminate() {
 }
 
 ThreadPool::~ThreadPool() {
-    // TODO Auto-generated destructor stub
+    this->terminate();
     delete[] threads;
     pthread_mutex_destroy(&lock);
 }

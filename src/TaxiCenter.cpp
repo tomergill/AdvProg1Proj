@@ -440,11 +440,6 @@ bool TaxiCenter::isFreeTripId(int id) {
     return true;
 }
 
-//void TaxiCenter::addingJob(TaxiCenter *trip) {
-//    Job *job = new Job(trip->setCourse, (void *) trip);
-//    this->threadpool->addJob(job);
-//}
-
 void TaxiCenter::addingJob(Trip *trip) {
     Job *job = new Job(trip->setCourse, (void *) trip);
     this->threadpool->addJob(job);
@@ -505,50 +500,6 @@ ThreadPool *TaxiCenter::getThreadpool() const {
 void TaxiCenter::setThreadpool(ThreadPool *threadpool) {
     TaxiCenter::threadpool = threadpool;
 }
-
-//void TaxiCenter::setNumberOfTrips(int numberOfTrips) {
-//    TaxiCenter::numberOfTrips = numberOfTrips;
-//}
-
-
-//void *TaxiCenter::setCourse(void *trip2) {
-//    TaxiCenter *taxiCenter = (TaxiCenter *) trip2;
-//    Trip *trip = taxiCenter->getCurrentTrip();
-//    cout << "before lock" << endl;
-//    pthread_mutex_lock(&LockGood1);
-//
-//    queue<AbstractNode *> course = trip->getBfs()->smallestRoad(trip->getMap()->getNode(trip->getXStartPoint(),
-//                                                                                        trip->getYStartPoint()),
-//                                                                trip->getMap()->getNode(trip->getXEndPoint(),
-//                                                                                        trip->getYEndPoint()));
-//    if (course.empty()) {
-//        cout << "the course is not good" << endl;
-//        trip->setIsValidEndPoint(1);
-//    } else {
-//        cout << "the course is good" << endl;
-////    cout << "finish do pthread" << endl;
-//        trip->setIsValidEndPoint(2);
-//        trip->settingCourse(course);
-//    }
-//    trip->getMap()->newRoad();
-//    trip->setIsFinishBFS(true);
-//
-//    if (trip->isIsValidEndPoint() == 1) {
-//        pthread_mutex_unlock(&LockGood1);
-//        return NULL;
-//    }
-//    taxiCenter->addTrip(trip);
-//    pthread_mutex_unlock(&LockGood1);
-//    return NULL;
-//}
-
-//Trip *TaxiCenter::getCurrentTrip() const {
-//    return currentTrip;
-//}
-//
-//void TaxiCenter::setCurrentTrip(Trip *currentTrip) {
-//    TaxiCenter::currentTrip = currentTrip;
-//}
 
 void TaxiCenter::addTrip(Trip *d) {
     this->trips.push_back(d);

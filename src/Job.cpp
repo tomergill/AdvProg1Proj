@@ -7,16 +7,25 @@
 
 #include "Job.h"
 
-Job::Job(void *(*func)(void *arg), void *arg): func(func), arg(arg) {
-	// TODO Auto-generated constructor stub
+/*
+ * add job to the threadpool
+ */
+Job::Job(void *(*func)(void *arg), void *arg) : func(func), arg(arg) {
+    // TODO Auto-generated constructor stub
 
 }
 
+/*
+ * do the jobs
+ */
 void Job::execute() {
-	func(arg);
+    func(arg);
 }
 
+/*
+ * delete job
+ */
 Job::~Job() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 

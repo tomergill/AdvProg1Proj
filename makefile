@@ -1,10 +1,16 @@
 all: server.out client.out 
 
-server.out: main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o Tcp.o 
-	g++ -std=c++0x -pthread main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Tcp.o Udp.o Driver.o Cab.o Trip.o Socket.o -lboost_serialization -lboost_regex -I. -o server.out
+server.out: main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o Tcp.o Job.o ThreadPool.o
+	g++ -std=c++0x -pthread main.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Tcp.o Udp.o Driver.o Cab.o Trip.o Socket.o Job.o ThreadPool.o -lboost_serialization -lboost_regex -I. -o server.out
 
-client.out: client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o Tcp.o
-	g++ -std=c++0x -pthread client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Tcp.o Trip.o Socket.o -lboost_serialization -lboost_regex -I. -o client.out
+client.out: client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Trip.o Socket.o Tcp.o Job.o ThreadPool.o
+	g++ -std=c++0x -pthread client.o AbstractNode.o MapFactory.o MatrixFactory.o TimeListener.o TripTimer.o TaxiCenter.o Algorithm.o Map.o MainFlow.o BFS.o AbstractCab.o Point.o Passenger.o Node.o LuxuryCab.o MatrixMap.o Udp.o Driver.o Cab.o Tcp.o Trip.o Socket.o Job.o ThreadPool.o -lboost_serialization -lboost_regex -I. -o client.out
+
+Job.o: src/Job.cpp src/Job.h
+	g++ -std=c++0x -pthread -c src/Job.cpp
+
+ThreadPool.o: src/ThreadPool.cpp src/ThreadPool.h
+	g++ -std=c++0x -pthread -c src/ThreadPool.cpp
 
 MapFactory.o: src/MapFactory.cpp src/MapFactory.h
 	g++ -std=c++0x -pthread -c src/MapFactory.cpp

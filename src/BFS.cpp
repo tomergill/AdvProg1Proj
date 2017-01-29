@@ -20,7 +20,7 @@ queue<AbstractNode *> BFS::smallestRoad(AbstractNode *node, AbstractNode *finish
     queue<AbstractNode *> queue;
     node->setDistance(0);
     node->setFlag(true);
-    if (!node->isObstacle()) {
+    if ((!node->isObstacle()) && (!finish->isObstacle())) {
         queue.push(node);
         // while we have abstract nodes in the queue.
         while (!queue.empty()) {
@@ -57,12 +57,17 @@ queue<AbstractNode *> BFS::smallestRoad(AbstractNode *node, AbstractNode *finish
                 }
             }
         }
+    }else{
+        while(!queue.empty()){
+            queue.pop();
+        }
     }
+    return queue;
 }
 
 /**
  * Destructor
  */
-BFS::~BFS(){
+BFS::~BFS() {
 
 }
