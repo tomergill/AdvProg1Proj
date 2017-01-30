@@ -182,6 +182,7 @@ void MainFlow::flow() {
 
     input = getInput();
     while (input != 7) {
+        //cout << taxiCenter->getTrips().size() << endl;
         switch (input) {
             case 1: //New Driver
             {
@@ -224,7 +225,8 @@ void MainFlow::flow() {
                     || pass_num < 1 || time1 < 1
                     || !taxiCenter->isFreeTripId(rideId))
                 {
-                    cout << "-1" << endl;
+                    if (!(start_x == end_x && start_y == end_y))
+                        cout << "-1" << endl;
                     input = getInput();
                     continue;
                 }

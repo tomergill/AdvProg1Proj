@@ -3,6 +3,7 @@
 //
 #include <pthread.h>
 #include "Trip.h"
+#include <iostream>
 
 pthread_mutex_t LockGood = PTHREAD_MUTEX_INITIALIZER;
 
@@ -118,6 +119,7 @@ void *Trip::setCourse(void *trip2) {
                                                                                         trip->end->getY()));
    // cout << course.size() << endl;
     if (course.empty()) {
+        //cout << "Trip #" << trip->rideId << " is not good" << endl;
         trip->setIsValidEndPoint(1);
     } else {
         trip->setIsValidEndPoint(2);
