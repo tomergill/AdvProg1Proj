@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainBP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="bcg" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainController">
+    <top>
+        <BorderPane BorderPane.alignment="TOP_CENTER">
+            <BorderPane.margin>
+                <Insets left="0.5" right="0.5" />
+            </BorderPane.margin>
+            <left>
+                <HBox>
+                    <Label text=" " BorderPane.alignment="CENTER" />
+                    <Label fx:id="tLbl" styleClass="Label" text="Current Time: " textFill="WHITE" />
+                    <Label fx:id="curTimeLbl" styleClass="values" text="999" textFill="#e80505" />
+                </HBox>
+            </left>
+            <top>
+            </top>
+            <right>
+                <HBox>
+                    <Label fx:id="eLbl" alignment="BASELINE_RIGHT" styleClass="Label" text="Error: " textFill="WHITE" />
+                    <Label fx:id="errLbl" alignment="BASELINE_RIGHT" styleClass="values" text="-1" textFill="#e80505" />
+                    <Label text=" " BorderPane.alignment="CENTER" />
+                </HBox>
+            </right>
+         <bottom>
+            <Label text=" " BorderPane.alignment="CENTER" />
+         </bottom>
+        </BorderPane>
+    </top>
+    <left>
+        <Label text="  " BorderPane.alignment="CENTER" />
+    </left>
+    <right>
+        <Label text="  " BorderPane.alignment="CENTER" />
+    </right>
+    <bottom>
+        <VBox prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label text=" " />
+                <BorderPane prefWidth="200.0">
+                    <left>
+                        <HBox>
+                            <Label styleClass="Label" text="send: " />
+                            <TextField fx:id="sendFld" styleClass="TextField" />
+                            <Button fx:id="sendBtn" mnemonicParsing="false" styleClass="Button" text="SEND" />
+                        </HBox>
+                    </left>
+                    <right>
+                        <HBox>
+                            <Label styleClass="Label" text="add: " />
+                            <TextField fx:id="addFld" styleClass="TextField" />
+                            <Button fx:id="addBtn" mnemonicParsing="false" styleClass="Button" text="ADD" />
+                        </HBox>
+                    </right>
+                </BorderPane>
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>

@@ -1,0 +1,38 @@
+.Label{
+    -fx-font: 24 "System Italic";
+    -fx-border-style: solid;
+    -fx-border-color: #3f5a5a;
+    -fx-border-width: 2px;
+    -fx-label-padding: 5px,0,0,5px;
+    -fx-background-color: slategrey;
+}
+
+.Button{
+     -fx-font: 16 "System Italic";
+     -fx-border-style: solid;
+     -fx-border-color: #3f5a5a;
+     -fx-border-width: 2px;
+     -fx-label-padding: 5px,0,0,5px;
+ }
+
+.TextField{
+    -fx-font: 20 "System Italic";
+    -fx-border-style: solid;
+    -fx-border-color: #3f5a5a;
+    -fx-border-width: 2px;
+    -fx-label-padding: 5px,0,0,5px;
+}
+
+.values {
+    -fx-font: 30 "System Italic";
+    /*-fx-border-style: inset;*/
+    -fx-border-color: #3f5a5a;
+    -fx-border-width: 2px;
+    -fx-label-padding: 3px,0,0,3px;
+    -fx-background-color: slategrey;
+}
+
+.bcg {
+    -fx-background-color: slategrey;
+    -fx-background-image: url("./resources/bcg.jpg");
+}
